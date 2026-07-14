@@ -3,22 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Robert • Designer de Ambientes</title>
+    <title>Robert • Design de Ambientes</title>
     <!-- Fontes Premium de Alta Costura -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-color: #080808;
-            --bronze-warm: #b59975;
+            --bg-color: #060606;
+            --bronze: #b59975;
+            --concrete-grey: #2a2a2c;
+            --oak-warm: #4a3b2c;
+            --light-glow: rgba(255, 230, 180, 0.12);
             --text-light: #f5f5f7;
-            --text-muted: #86868b;
-            --glass-bg: rgba(15, 15, 15, 0.75);
-            --glass-border: rgba(181, 153, 117, 0.12);
+            --text-muted: #7e7e86;
             --font-serif: 'Cormorant Garamond', serif;
             --font-sans: 'Plus Jakarta Sans', sans-serif;
+            
+            /* Estado Dinâmico do Monolito */
+            --monolith-bg: var(--concrete-grey);
+            --monolith-glow: rgba(181, 153, 117, 0.15);
+            --monolith-border: rgba(255, 255, 255, 0.08);
         }
 
         * {
@@ -26,492 +32,506 @@
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         body, html {
             background-color: var(--bg-color);
             color: var(--text-light);
             font-family: var(--font-sans);
-            height: 100%;
-            overflow: hidden;
-        }
-
-        /* Container de Rolagem Snap */
-        .viewport-container {
-            height: 100%;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* Cada seção ocupa exatamente uma tela de celular */
-        section {
             height: 100vh;
             width: 100vw;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 24px;
-            position: relative;
             overflow: hidden;
-            background-image: 
-                radial-gradient(circle at 50% 30%, rgba(181, 153, 117, 0.05) 0%, transparent 60%);
+            position: relative;
         }
 
-        /* Textura de ruído de concreto no fundo */
-        section::after {
+        /* Ruído de textura orgânica de fundo */
+        body::before {
             content: '';
             position: absolute;
             inset: 0;
-            opacity: 0.02;
+            opacity: 0.015;
             pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            z-index: 1;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        /* Header Fixo */
+        /* Gradiente de iluminação cênica de fundo */
+        .ambient-light {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 50% 35%, var(--monolith-glow) 0%, transparent 70%);
+            z-index: 2;
+            transition: background 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        /* Header Minimalista */
         header {
-            position: fixed;
-            top: 24px;
+            position: absolute;
+            top: 28px;
             left: 24px;
             right: 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            pointer-events: none;
         }
 
-        .designer-brand {
+        .brand {
             font-family: var(--font-serif);
-            font-size: 1.1rem;
-            letter-spacing: 2px;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
             color: var(--text-light);
-            pointer-events: auto;
         }
 
-        .scroll-indicator {
-            font-size: 0.65rem;
-            text-transform: uppercase;
+        .status {
+            font-size: 0.6rem;
             letter-spacing: 2px;
-            color: var(--bronze-warm);
-        }
-
-        /* Container de Perspectiva 3D */
-        .card-perspective {
-            perspective: 1000px;
-            width: 100%;
-            max-width: 340px;
-            aspect-ratio: 10 / 15;
-            z-index: 10;
+            text-transform: uppercase;
+            color: var(--bronze);
             display: flex;
-            justify-content: center;
             align-items: center;
+            gap: 8px;
         }
 
-        /* Card Sensorial */
-        .sensory-card {
-            width: 100%;
+        .status::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            background: var(--bronze);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--bronze);
+        }
+
+        /* Área do Simulador Central */
+        main {
             height: 100%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 32px 24px;
+            width: 100%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transform-style: preserve-3d;
-            transition: transform 0.15s ease-out;
-            box-shadow: 
-                0 30px 60px rgba(0,0,0,0.5),
-                inset 0 1px 1px rgba(255,255,255,0.05);
+            align-items: center;
+            padding: 100px 24px 40px 24px;
             position: relative;
+            z-index: 10;
+        }
+
+        /* Zona de toque isolada para rotação 3D */
+        .touch-zone {
+            flex: 1;
+            width: 100%;
+            max-width: 360px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none; /* Bloqueia o scroll nativo do celular ao arrastar */
+        }
+
+        .perspective {
+            perspective: 1200px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* O Monolito Espacial */
+        .monolith {
+            width: 220px;
+            height: 340px;
+            background: var(--monolith-bg);
+            border: 1px solid var(--monolith-border);
+            border-radius: 8px;
+            box-shadow: 
+                0 40px 80px rgba(0, 0, 0, 0.7),
+                inset 0 1px 1px rgba(255, 255, 255, 0.05);
+            transform-style: preserve-3d;
+            transition: 
+                transform 0.15s ease-out, 
+                background 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.8s ease,
+                box-shadow 0.8s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 32px 24px;
             overflow: hidden;
         }
 
-        /* Brilho dinâmico baseado no cursor/toque */
-        .sensory-card::before {
+        /* Efeito de Reflexo de Luz Especular (Lustre) */
+        .monolith::before {
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: 16px;
-            background: radial-gradient(circle at var(--tx, 50%) var(--ty, 50%), rgba(181, 153, 117, 0.12) 0%, transparent 50%);
+            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.06) 0%, transparent 60%);
             pointer-events: none;
+            z-index: 3;
         }
 
-        .card-number {
-            font-family: var(--font-sans);
-            font-size: 0.7rem;
+        /* Texturas sobrepostas dinamicamente */
+        .texture-overlay {
+            position: absolute;
+            inset: 0;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 1;
+            transition: background 0.8s ease, opacity 0.8s ease;
+        }
+
+        .monolith-header {
+            z-index: 10;
+            transform: translateZ(25px);
+        }
+
+        .monolith-header span {
+            font-size: 0.65rem;
             letter-spacing: 3px;
-            color: var(--bronze-warm);
             text-transform: uppercase;
+            color: var(--bronze);
+            font-weight: 600;
         }
 
-        .card-main h2 {
-            font-family: var(--font-serif);
-            font-size: 2.1rem;
-            font-weight: 300;
-            line-height: 1.15;
-            margin-bottom: 12px;
-            transform: translateZ(30px);
-        }
-
-        .card-main p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            line-height: 1.6;
-            transform: translateZ(15px);
-        }
-
-        /* Container do Avatar 3D Procedural */
-        .avatar-container {
-            width: 100%;
-            height: 160px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            margin: 15px 0;
+        .monolith-body {
+            z-index: 10;
             transform: translateZ(40px);
         }
 
-        #avatar-canvas {
-            width: 180px;
-            height: 180px;
-            pointer-events: none;
+        .monolith-body h2 {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            font-weight: 300;
+            line-height: 1.15;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            transition: color 0.5s ease;
         }
 
-        /* Rodapé do Card e Ações */
-        .card-footer {
+        .monolith-body p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .monolith-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 15px;
+            z-index: 10;
             transform: translateZ(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 16px;
         }
 
-        .card-action {
-            font-size: 0.7rem;
+        .monolith-footer span {
+            font-size: 0.6rem;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 500;
+            color: var(--text-muted);
         }
 
-        /* Botão WhatsApp Premium (CTA Absurdo) */
-        .btn-whatsapp {
+        /* Painel de Controle de Materiais (Fácil alcance do polegar) */
+        .control-deck {
+            width: 100%;
+            max-width: 360px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Amostras de Materiais */
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .material-button {
+            background: rgba(20, 20, 22, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 12px 6px;
+            font-family: var(--font-sans);
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
+        }
+
+        .material-button.active {
+            border-color: var(--bronze);
+            color: var(--text-light);
+            background: rgba(181, 153, 117, 0.05);
+            box-shadow: 0 4px 15px rgba(181, 153, 117, 0.1);
+        }
+
+        /* Botão de Fechamento Estratégico (WhatsApp) */
+        .cta-button {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            background: transparent;
-            border: 1px solid var(--bronze-warm);
-            color: var(--text-light);
-            padding: 14px;
+            gap: 12px;
+            background: var(--text-light);
+            color: var(--bg-color);
+            border: none;
+            padding: 18px;
             border-radius: 8px;
-            text-decoration: none;
+            font-family: var(--font-sans);
             font-size: 0.75rem;
             font-weight: 600;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-top: 15px;
-            transform: translateZ(35px);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(181, 153, 117, 0.15);
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
         }
 
-        .btn-whatsapp::before {
+        .cta-button::after {
             content: '';
             position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-            transition: left 0.5s ease;
+            width: 30px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: skewX(-30deg);
+            top: 0;
+            left: -50px;
+            transition: none;
         }
 
-        .btn-whatsapp:active, .btn-whatsapp:hover {
-            background: var(--bronze-warm);
-            color: #080808;
-            box-shadow: 0 8px 25px rgba(181, 153, 117, 0.4);
+        .cta-button:active {
+            transform: scale(0.97);
+            background: var(--bronze);
+            color: var(--text-light);
+            box-shadow: 0 4px 15px rgba(181, 153, 117, 0.3);
         }
 
-        .btn-whatsapp:active::before {
-            left: 100%;
+        .cta-button:active::after {
+            left: 110%;
+            transition: left 0.6s ease;
         }
 
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--bronze-warm);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--bronze-warm);
-        }
-
-        .swipe-hint {
-            position: absolute;
-            bottom: 40px;
-            font-size: 0.65rem;
-            letter-spacing: 3px;
+        /* Feedback de Instabilidade/Movimento */
+        .instruction {
+            font-size: 0.6rem;
             color: var(--text-muted);
             text-transform: uppercase;
-            animation: bounce 2s infinite;
-            pointer-events: none;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); opacity: 0.4; }
-            50% { transform: translateY(-6px); opacity: 0.8; }
+            letter-spacing: 2px;
+            text-align: center;
+            margin-top: -10px;
+            opacity: 0.6;
         }
     </style>
 </head>
 <body>
 
+    <!-- Luz de Fundo Reativa -->
+    <div class="ambient-light" id="bg-light"></div>
+
     <!-- Header Fixo -->
     <header>
-        <div class="designer-brand">ROBERT</div>
-        <div class="scroll-indicator">Portfólio Estratégico</div>
+        <div class="brand">ROBERT</div>
+        <div class="status">Simulador Tátil v1.0</div>
     </header>
 
-    <!-- Container do Viewport com Snap Scroll -->
-    <div class="viewport-container">
+    <main>
+        
+        <!-- Instrução Inicial -->
+        <div class="instruction">Arraste para rotacionar o espaço</div>
 
-        <!-- TELA 1: CAPA COM ESTRUTURA METÁLICA EM 3D -->
-        <section>
-            <div class="card-perspective">
-                <div class="sensory-card">
-                    <div class="card-number">01 // MANIFESTO</div>
-                    <div class="card-main">
-                        <h2>Espaço,<br>Identidade<br>& Luxo.</h2>
-                        <p>A união entre a solidez industrial e o calor orgânico. Criando cenários que traduzem poder, design e funcionalidade em cada metro quadrado.</p>
+        <!-- Área de Toque Tridimensional -->
+        <div class="touch-zone" id="touch-area">
+            <div class="perspective">
+                <div class="monolith" id="space-monolith">
+                    <!-- Camada de Textura Procedural -->
+                    <div class="texture-overlay" id="monolith-texture"></div>
+
+                    <div class="monolith-header">
+                        <span id="monolith-tag">VOLUME ACÚSTICO</span>
                     </div>
-                    <div class="card-footer">
-                        <span class="card-action">Role para explorar</span>
+
+                    <div class="monolith-body">
+                        <h2 id="monolith-title">Concreto<br>Bruto.</h2>
+                        <p id="monolith-desc">Superfícies monolíticas que trazem peso, verdade estrutural e solidez para a composição espacial.</p>
+                    </div>
+
+                    <div class="monolith-footer">
+                        <span id="monolith-coord">S-01 // CORE</span>
                         <div class="status-dot"></div>
                     </div>
                 </div>
             </div>
-            <div class="swipe-hint">Deslize para cima</div>
-        </section>
+        </div>
 
-        <!-- TELA 2: PROJETO DE AMBIENTES -->
-        <section>
-            <div class="card-perspective">
-                <div class="sensory-card">
-                    <div class="card-number">02 // PORTFÓLIO</div>
-                    <div class="card-main">
-                        <h2>Cenografia<br>Industrial.</h2>
-                        <p>O luxo materializado no concreto texturizado, na madeira de demolição, na iluminação focada e nas linhas estruturais perfeitas.</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="card-action">Deslize para o contato</span>
-                        <div class="status-dot"></div>
-                    </div>
-                </div>
+        <!-- Deck de Controle Inteligente -->
+        <div class="control-deck">
+            <!-- Amostras de Materiais -->
+            <div class="materials-grid">
+                <button class="material-button active" onclick="setMaterial('concreto')">Concreto</button>
+                <button class="material-button" onclick="setMaterial('madeira')">Carvalho</button>
+                <button class="material-button" onclick="setMaterial('luz')">Luz Cênica</button>
             </div>
-        </section>
 
-        <!-- TELA 3: O AVATAR DIGITAL & FECHAMENTO COM WHATSAPP -->
-        <section>
-            <div class="card-perspective">
-                <div class="sensory-card">
-                    <div class="card-number">03 // PROJETO PRESENCIAL</div>
-                    
-                    <div class="card-main" style="margin-bottom: 0;">
-                        <h2 style="font-size: 1.8rem; text-align: center; margin-bottom: 0;">Fale Conosco</h2>
-                    </div>
+            <!-- Botão WhatsApp Direto -->
+            <!-- Note: Utilizando o telefone estratégico do usuário fornecido: 31982313684 -->
+            <a href="https://wa.me/5531982313684?text=Olá%20Robert,%20interagi%20com%20o%20seu%20Simulador%20Tátil%20e%20gostaria%20de%20solicitar%20um%20diagnóstico%20estratégico%20para%20o%20meu%20espaço." class="cta-button" target="_blank">
+                Solicitar Diagnóstico
+            </a>
+        </div>
 
-                    <!-- Canvas onde o Avatar 3D de luz procedural renderiza -->
-                    <div class="avatar-container">
-                        <canvas id="avatar-canvas"></canvas>
-                    </div>
+    </main>
 
-                    <div class="card-main" style="text-align: center;">
-                        <p style="font-size: 0.8rem; margin-bottom: 10px;">Toque na tela para interagir com o meu Digital Twin e inicie um novo capítulo de design.</p>
-                        
-                        <!-- Substitua o link abaixo com o seu telefone real do WhatsApp -->
-                        <a href="https://wa.me/5531999999999?text=Olá%20Robert,%20acessei%20seu%20portfólio%20e%20gostaria%20de%20fazer%20um%20projeto%20estratégico%20de%20ambiente." class="btn-whatsapp" target="_blank">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block; vertical-align:middle;">
-                                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.503-5.732-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.628 3.824 14.16 2.8 11.57 2.8c-5.442 0-9.866 4.372-9.87 9.802 0 1.714.475 3.393 1.374 4.869l-.938 3.425 3.51-.942z"/>
-                            </svg>
-                            Solicitar Projeto
-                        </a>
-                    </div>
-
-                    <div class="card-footer" style="border-top: none; padding-top: 0;">
-                        <span class="card-action" style="font-size: 0.6rem; color: var(--bronze-warm);">Conexão Direta</span>
-                        <div class="status-dot"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </div>
-
-    <!-- Script de Movimentação Sensorial e Avatar 3D Procedural -->
+    <!-- Script de Física 3D e Transição de Materiais -->
     <script>
-        // 1. EFEITO TÁTIL 3D NOS CARDS
-        const cards = document.querySelectorAll('.sensory-card');
-        cards.forEach(card => {
-            const perspectiveContainer = card.parentElement;
+        const touchArea = document.getElementById('touch-area');
+        const monolith = document.getElementById('space-monolith');
+        const bgLight = document.getElementById('bg-light');
+        
+        // Elementos Dinâmicos do Monolito
+        const mTexture = document.getElementById('monolith-texture');
+        const mTag = document.getElementById('monolith-tag');
+        const mTitle = document.getElementById('monolith-title');
+        const mDesc = document.getElementById('monolith-desc');
+        const mCoord = document.getElementById('monolith-coord');
 
-            perspectiveContainer.addEventListener('pointermove', (e) => {
-                const rect = perspectiveContainer.getBoundingClientRect();
-                const x = e.clientX - rect.left - (rect.width / 2);
-                const y = e.clientY - rect.top - (rect.height / 2);
-                
-                const rotateX = -(y / (rect.height / 2)) * 15;
-                const rotateY = (x / (rect.width / 2)) * 15;
+        let isDragging = false;
+        let startX = 0;
+        let startY = 0;
+        let currentRotX = 0;
+        let currentRotY = 0;
+        let targetRotX = 0;
+        let targetRotY = 0;
 
-                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-
-                const percentX = ((e.clientX - rect.left) / rect.width) * 100;
-                const percentY = ((e.clientY - rect.top) / rect.height) * 100;
-                card.style.setProperty('--tx', `${percentX}%`);
-                card.style.setProperty('--ty', `${percentY}%`);
-            });
-
-            perspectiveContainer.addEventListener('pointerleave', () => {
-                card.style.transform = 'rotateX(0deg) rotateY(0deg)';
-                card.style.setProperty('--tx', '50%');
-                card.style.setProperty('--ty', '50%');
-            });
+        // FÍSICA TÁTIL E ROTAÇÃO (MOBILE-FIRST)
+        touchArea.addEventListener('pointerdown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            touchArea.setPointerCapture(e.pointerId);
         });
 
-        // 2. RENDER DO AVATAR GEOMÉTRICO 3D (CANVAS PROCEDURAL)
-        const canvas = document.getElementById('avatar-canvas');
-        const ctx = canvas.getContext('2d');
+        touchArea.addEventListener('pointermove', (e) => {
+            const rect = touchArea.getBoundingClientRect();
+            
+            // 1. Efeito de brilho especular que segue o toque
+            const mx = e.clientX - rect.left;
+            const my = e.clientY - rect.top;
+            monolith.style.setProperty('--mx', `${mx}px`);
+            monolith.style.setProperty('--my', `${my}px`);
 
-        // Configuração de Densidade de Pixel para Celular ficar super nítido
-        const dpr = window.devicePixelRatio || 1;
-        canvas.width = 180 * dpr;
-        canvas.height = 180 * dpr;
-        ctx.scale(dpr, dpr);
+            if (!isDragging) return;
 
-        let rotationY = 0;
-        let rotationX = 0;
-        let targetRotationY = 0;
-        let targetRotationX = 0;
+            // 2. Rotação 3D do Monolito
+            const deltaX = e.clientX - startX;
+            const deltaY = e.clientY - startY;
 
-        // Estrutura de pontos 3D que mapeia uma "máscara/cabeça tridimensional estrutural"
-        const points = [
-            {x: 0, y: -60, z: 0},     // Topo da cabeça
-            {x: -35, y: -30, z: 25},  // Testa Esquerda
-            {x: 35, y: -30, z: 25},   // Testa Direita
-            {x: -45, y: 10, z: 15},   // Maçã do rosto esquerdo
-            {x: 45, y: 10, z: 15},    // Maçã do rosto direito
-            {x: 0, y: 5, z: 50},      // Nariz
-            {x: -25, y: 45, z: 15},   // Mandíbula esquerda
-            {x: 25, y: 45, z: 15},    // Mandíbula direita
-            {x: 0, y: 65, z: 20},     // Queixo
-            {x: -30, y: -30, z: -35}, // Trás Esquerdo
-            {x: 30, y: -30, z: -35},  // Trás Direito
-            {x: 0, y: 30, z: -40}     // Nuca
-        ];
+            // Mapeamento da força do arraste (limite confortável de rotação)
+            targetRotY = currentRotY + (deltaX * 0.25);
+            targetRotX = currentRotX - (deltaY * 0.25);
 
-        // Conexões de linhas para criar a malha estrutural (Wireframe)
-        const connections = [
-            [0, 1], [0, 2], [0, 9], [0, 10],
-            [1, 2], [1, 3], [1, 9],
-            [2, 4], [2, 10],
-            [3, 5], [4, 5], [3, 6], [4, 7],
-            [5, 8], [6, 8], [7, 8],
-            [6, 11], [7, 11], [9, 11], [10, 11]
-        ];
+            // Trava para evitar rotações absurdas de cabeça para baixo
+            targetRotX = Math.max(-40, Math.min(40, targetRotX));
 
-        // Adiciona reação ao movimento do toque sobre a tela inteira
-        document.addEventListener('pointermove', (e) => {
-            // Usa as coordenadas de toque para inclinar o avatar no próprio eixo
-            const x = (e.clientX / window.innerWidth) - 0.5;
-            const y = (e.clientY / window.innerHeight) - 0.5;
-            targetRotationY = x * 3;
-            targetRotationX = y * 1.5;
+            monolith.style.transform = `rotateX(${targetRotX}deg) rotateY(${targetRotY}deg)`;
         });
 
-        function project(x, y, z) {
-            // Projeção básica 3D para 2D com perspectiva
-            const fov = 150;
-            const distance = 160;
-            const scale = fov / (distance + z);
-            const projX = x * scale + 90; // Centraliza no Canvas de 180x180
-            const projY = y * scale + 90;
-            return { x: projX, y: projY };
+        touchArea.addEventListener('pointerup', (e) => {
+            isDragging = false;
+            // Salva o ângulo atual para o próximo movimento começar dele
+            currentRotX = targetRotX;
+            currentRotY = targetRotY;
+        });
+
+        // Retorno suave para o centro quando o dedo sai do quadrante do simulador
+        touchArea.addEventListener('pointerleave', () => {
+            if (!isDragging) {
+                // Animação suave de volta para a posição frontal
+                currentRotX = 0;
+                currentRotY = 0;
+                targetRotX = 0;
+                targetRotY = 0;
+                monolith.style.transform = 'rotateX(0deg) rotateY(0deg)';
+            }
+        });
+
+        // BANCO DE MATERIAIS SENSORIAIS (Industrial Organic)
+        const materials = {
+            concreto: {
+                tag: "VOLUME ACÚSTICO",
+                title: "Concreto<br>Bruto.",
+                desc: "Superfícies monolíticas que trazem peso, verdade estrutural e solidez para a composição espacial.",
+                coord: "S-01 // CORE",
+                bg: "#1e1e1f",
+                border: "rgba(255, 255, 255, 0.08)",
+                glow: "rgba(181, 153, 117, 0.08)",
+                shadow: "0 40px 80px rgba(0, 0, 0, 0.7)",
+                texture: "repeating-linear-gradient(45deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 2px, transparent 2px, transparent 10px)"
+            },
+            madeira: {
+                tag: "MÉTRICA ORGÂNICA",
+                title: "Carvalho<br>Nobre.",
+                desc: "O contraste térmico ideal. Texturas fibrosas que humanizam o ambiente através do toque e do calor visual.",
+                coord: "S-02 // ORGANIC",
+                bg: "#2b2015",
+                border: "rgba(181, 153, 117, 0.2)",
+                glow: "rgba(181, 153, 117, 0.18)",
+                shadow: "0 40px 80px rgba(74, 59, 44, 0.3)",
+                texture: "radial-gradient(ellipse at center, rgba(181, 153, 117, 0.1) 0%, transparent 80%)"
+            },
+            luz: {
+                tag: "ATMOSFERA CÊNICA",
+                title: "Luz<br>Direcionada.",
+                desc: "A matéria invisível do design. Curadoria de sombras projetadas que esculpem volumes e geram mistério.",
+                coord: "S-03 // ATMOS",
+                bg: "#121214",
+                border: "rgba(255, 215, 0, 0.3)",
+                glow: "rgba(255, 200, 100, 0.25)",
+                shadow: "0 0 50px rgba(181, 153, 117, 0.2)",
+                texture: "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%)"
+            }
+        };
+
+        function setMaterial(type) {
+            // Atualiza botões ativos
+            document.querySelectorAll('.material-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const m = materials[type];
+
+            // Aplica transições estéticas no Monolito
+            document.documentElement.style.setProperty('--monolith-bg', m.bg);
+            document.documentElement.style.setProperty('--monolith-border', m.border);
+            document.documentElement.style.setProperty('--monolith-glow', m.glow);
+            
+            monolith.style.boxShadow = m.shadow;
+            mTexture.style.background = m.texture;
+
+            // Transição de texto suave
+            mTag.style.opacity = 0;
+            mTitle.style.opacity = 0;
+            mDesc.style.opacity = 0;
+            mCoord.style.opacity = 0;
+
+            setTimeout(() => {
+                mTag.textContent = m.tag;
+                mTitle.innerHTML = m.title;
+                mDesc.textContent = m.desc;
+                mCoord.textContent = m.coord;
+
+                mTag.style.opacity = 1;
+                mTitle.style.opacity = 1;
+                mDesc.style.opacity = 1;
+                mCoord.style.opacity = 1;
+            }, 300);
         }
-
-        function rotateY3D(point, angle) {
-            const cos = Math.cos(angle);
-            const sin = Math.sin(angle);
-            return {
-                x: point.x * cos - point.z * sin,
-                y: point.y,
-                z: point.x * sin + point.z * cos
-            };
-        }
-
-        function rotateX3D(point, angle) {
-            const cos = Math.cos(angle);
-            const sin = Math.sin(angle);
-            return {
-                x: point.x,
-                y: point.y * cos - point.z * sin,
-                z: point.y * sin + point.z * cos
-            };
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, 180, 180);
-
-            // Suavização do movimento (Lirp)
-            rotationY += (targetRotationY - rotationY) * 0.05;
-            rotationX += (targetRotationX - rotationX) * 0.05;
-
-            // Rotação automática suave constante além da rotação do toque
-            const currentAngleY = rotationY + Date.now() * 0.0005;
-
-            const projectedPoints = points.map(p => {
-                let r = rotateY3D(p, currentAngleY);
-                r = rotateX3D(r, rotationX);
-                return project(r.x, r.y, r.z);
-            });
-
-            // Desenhar conexões de linhas (A malha estrutural)
-            ctx.strokeStyle = 'rgba(181, 153, 117, 0.25)';
-            ctx.lineWidth = 1;
-            connections.forEach(conn => {
-                const p1 = projectedPoints[conn[0]];
-                const p2 = projectedPoints[conn[1]];
-                ctx.beginPath();
-                ctx.moveTo(p1.x, p1.y);
-                ctx.lineTo(p2.x, p2.y);
-                ctx.stroke();
-            });
-
-            // Desenhar os nós (Pontos brilhantes de luz)
-            projectedPoints.forEach(p => {
-                ctx.fillStyle = '#b59975';
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Glow do ponto
-                ctx.fillStyle = 'rgba(181, 153, 117, 0.15)';
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 7, 0, Math.PI * 2);
-                ctx.fill();
-            });
-
-            requestAnimationFrame(animate);
-        }
-
-        animate();
     </script>
 </body>
 </html>
