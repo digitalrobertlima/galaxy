@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Robert • Portfolio</title>
+    <title>Robert • Designer de Ambientes</title>
     <!-- Fontes Premium de Alta Costura -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-color: #0b0b0b;
+            --bg-color: #080808;
             --bronze-warm: #b59975;
             --text-light: #f5f5f7;
             --text-muted: #86868b;
-            --glass-bg: rgba(18, 18, 18, 0.7);
+            --glass-bg: rgba(15, 15, 15, 0.75);
             --glass-border: rgba(181, 153, 117, 0.12);
             --font-serif: 'Cormorant Garamond', serif;
             --font-sans: 'Plus Jakarta Sans', sans-serif;
@@ -36,7 +36,7 @@
             overflow: hidden;
         }
 
-        /* Container de Rolagem Snap (Nativo e leve) */
+        /* Container de Rolagem Snap */
         .viewport-container {
             height: 100%;
             overflow-y: scroll;
@@ -59,10 +59,10 @@
             position: relative;
             overflow: hidden;
             background-image: 
-                radial-gradient(circle at 50% 30%, rgba(181, 153, 117, 0.06) 0%, transparent 60%);
+                radial-gradient(circle at 50% 30%, rgba(181, 153, 117, 0.05) 0%, transparent 60%);
         }
 
-        /* Textura sutil de concreto/ruído de fundo */
+        /* Textura de ruído de concreto no fundo */
         section::after {
             content: '';
             position: absolute;
@@ -72,7 +72,7 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        /* Moldura de Design Superior */
+        /* Header Fixo */
         header {
             position: fixed;
             top: 24px;
@@ -98,9 +98,6 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             color: var(--bronze-warm);
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         /* Container de Perspectiva 3D */
@@ -108,22 +105,22 @@
             perspective: 1000px;
             width: 100%;
             max-width: 340px;
-            aspect-ratio: 10 / 14;
+            aspect-ratio: 10 / 15;
             z-index: 10;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* O Card Sensorial */
+        /* Card Sensorial */
         .sensory-card {
             width: 100%;
             height: 100%;
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 32px 24px;
             display: flex;
             flex-direction: column;
@@ -131,25 +128,25 @@
             transform-style: preserve-3d;
             transition: transform 0.15s ease-out;
             box-shadow: 
-                0 30px 60px rgba(0,0,0,0.4),
-                inset 0 1px 0 rgba(255,255,255,0.05);
+                0 30px 60px rgba(0,0,0,0.5),
+                inset 0 1px 1px rgba(255,255,255,0.05);
             position: relative;
+            overflow: hidden;
         }
 
-        /* Brilho reflexivo interno do card */
+        /* Brilho dinâmico baseado no cursor/toque */
         .sensory-card::before {
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: 12px;
-            background: radial-gradient(circle at var(--tx, 50%) var(--ty, 50%), rgba(181, 153, 117, 0.1) 0%, transparent 50%);
+            border-radius: 16px;
+            background: radial-gradient(circle at var(--tx, 50%) var(--ty, 50%), rgba(181, 153, 117, 0.12) 0%, transparent 50%);
             pointer-events: none;
         }
 
-        /* Estética do Conteúdo do Card */
         .card-number {
             font-family: var(--font-sans);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             letter-spacing: 3px;
             color: var(--bronze-warm);
             text-transform: uppercase;
@@ -157,11 +154,11 @@
 
         .card-main h2 {
             font-family: var(--font-serif);
-            font-size: 2.2rem;
+            font-size: 2.1rem;
             font-weight: 300;
-            line-height: 1.1;
+            line-height: 1.15;
             margin-bottom: 12px;
-            transform: translateZ(30px); /* Efeito parallax interno */
+            transform: translateZ(30px);
         }
 
         .card-main p {
@@ -171,12 +168,31 @@
             transform: translateZ(15px);
         }
 
+        /* Container do Avatar 3D Procedural */
+        .avatar-container {
+            width: 100%;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 15px 0;
+            transform: translateZ(40px);
+        }
+
+        #avatar-canvas {
+            width: 180px;
+            height: 180px;
+            pointer-events: none;
+        }
+
+        /* Rodapé do Card e Ações */
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 20px;
+            padding-top: 15px;
             transform: translateZ(20px);
         }
 
@@ -189,7 +205,49 @@
             font-weight: 500;
         }
 
-        /* Indicadores de Status Macios */
+        /* Botão WhatsApp Premium (CTA Absurdo) */
+        .btn-whatsapp {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: transparent;
+            border: 1px solid var(--bronze-warm);
+            color: var(--text-light);
+            padding: 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 15px;
+            transform: translateZ(35px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(181, 153, 117, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-whatsapp::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-whatsapp:active, .btn-whatsapp:hover {
+            background: var(--bronze-warm);
+            color: #080808;
+            box-shadow: 0 8px 25px rgba(181, 153, 117, 0.4);
+        }
+
+        .btn-whatsapp:active::before {
+            left: 100%;
+        }
+
         .status-dot {
             width: 6px;
             height: 6px;
@@ -198,7 +256,6 @@
             box-shadow: 0 0 8px var(--bronze-warm);
         }
 
-        /* Instrução de Usabilidade Invisível / Intuitiva */
         .swipe-hint {
             position: absolute;
             bottom: 40px;
@@ -221,20 +278,20 @@
     <!-- Header Fixo -->
     <header>
         <div class="designer-brand">ROBERT</div>
-        <div class="scroll-indicator">Portfolio</div>
+        <div class="scroll-indicator">Portfólio Estratégico</div>
     </header>
 
     <!-- Container do Viewport com Snap Scroll -->
     <div class="viewport-container">
 
-        <!-- TELA 1: CAPA -->
+        <!-- TELA 1: CAPA COM ESTRUTURA METÁLICA EM 3D -->
         <section>
             <div class="card-perspective">
                 <div class="sensory-card">
-                    <div class="card-number">01 // CONCEITO</div>
+                    <div class="card-number">01 // MANIFESTO</div>
                     <div class="card-main">
                         <h2>Espaço,<br>Identidade<br>& Luxo.</h2>
-                        <p>Design de ambientes desenhado sob a perspectiva do minimalismo industrial, materiais autênticos e atmosfera cênica.</p>
+                        <p>A união entre a solidez industrial e o calor orgânico. Criando cenários que traduzem poder, design e funcionalidade em cada metro quadrado.</p>
                     </div>
                     <div class="card-footer">
                         <span class="card-action">Role para explorar</span>
@@ -245,34 +302,52 @@
             <div class="swipe-hint">Deslize para cima</div>
         </section>
 
-        <!-- TELA 2: PROJETO INDUSTRIAL ORGANIC -->
+        <!-- TELA 2: PROJETO DE AMBIENTES -->
         <section>
             <div class="card-perspective">
                 <div class="sensory-card">
-                    <div class="card-number">02 // PROJETO</div>
+                    <div class="card-number">02 // PORTFÓLIO</div>
                     <div class="card-main">
-                        <h2>Industrial<br>Organic.</h2>
-                        <p>A união entre a brutalidade do concreto aparente e a sofisticação calorosa da madeira nobre e da vegetação interna.</p>
+                        <h2>Cenografia<br>Industrial.</h2>
+                        <p>O luxo materializado no concreto texturizado, na madeira de demolição, na iluminação focada e nas linhas estruturais perfeitas.</p>
                     </div>
                     <div class="card-footer">
-                        <a href="#" class="card-action">Ver detalhes do espaço</a>
+                        <span class="card-action">Deslize para o contato</span>
                         <div class="status-dot"></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- TELA 3: DIRETRIZ ESTRATÉGICA -->
+        <!-- TELA 3: O AVATAR DIGITAL & FECHAMENTO COM WHATSAPP -->
         <section>
             <div class="card-perspective">
                 <div class="sensory-card">
-                    <div class="card-number">03 // SISTEMA</div>
-                    <div class="card-main">
-                        <h2>Design<br>Estratégico.</h2>
-                        <p>A engenharia do espaço físico projetada para otimizar fluxos comerciais, gerar experiências sensoriais e consolidar marcas de luxo.</p>
+                    <div class="card-number">03 // PROJETO PRESENCIAL</div>
+                    
+                    <div class="card-main" style="margin-bottom: 0;">
+                        <h2 style="font-size: 1.8rem; text-align: center; margin-bottom: 0;">Fale Conosco</h2>
                     </div>
-                    <div class="card-footer">
-                        <a href="#" class="card-action">Explorar metodologia</a>
+
+                    <!-- Canvas onde o Avatar 3D de luz procedural renderiza -->
+                    <div class="avatar-container">
+                        <canvas id="avatar-canvas"></canvas>
+                    </div>
+
+                    <div class="card-main" style="text-align: center;">
+                        <p style="font-size: 0.8rem; margin-bottom: 10px;">Toque na tela para interagir com o meu Digital Twin e inicie um novo capítulo de design.</p>
+                        
+                        <!-- Substitua o link abaixo com o seu telefone real do WhatsApp -->
+                        <a href="https://wa.me/5531999999999?text=Olá%20Robert,%20acessei%20seu%20portfólio%20e%20gostaria%20de%20fazer%20um%20projeto%20estratégico%20de%20ambiente." class="btn-whatsapp" target="_blank">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block; vertical-align:middle;">
+                                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.503-5.732-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.628 3.824 14.16 2.8 11.57 2.8c-5.442 0-9.866 4.372-9.87 9.802 0 1.714.475 3.393 1.374 4.869l-.938 3.425 3.51-.942z"/>
+                            </svg>
+                            Solicitar Projeto
+                        </a>
+                    </div>
+
+                    <div class="card-footer" style="border-top: none; padding-top: 0;">
+                        <span class="card-action" style="font-size: 0.6rem; color: var(--bronze-warm);">Conexão Direta</span>
                         <div class="status-dot"></div>
                     </div>
                 </div>
@@ -281,42 +356,162 @@
 
     </div>
 
-    <!-- Script de Movimentação Sensorial Isolada -->
+    <!-- Script de Movimentação Sensorial e Avatar 3D Procedural -->
     <script>
+        // 1. EFEITO TÁTIL 3D NOS CARDS
         const cards = document.querySelectorAll('.sensory-card');
-
         cards.forEach(card => {
             const perspectiveContainer = card.parentElement;
 
-            // Ativa o movimento tanto no toque quanto no mouse
             perspectiveContainer.addEventListener('pointermove', (e) => {
                 const rect = perspectiveContainer.getBoundingClientRect();
-                
-                // Calcula a posição do toque relativa ao centro do contêiner do card
                 const x = e.clientX - rect.left - (rect.width / 2);
                 const y = e.clientY - rect.top - (rect.height / 2);
                 
-                // Limita a rotação máxima para não quebrar a legibilidade (máximo 15 graus)
                 const rotateX = -(y / (rect.height / 2)) * 15;
                 const rotateY = (x / (rect.width / 2)) * 15;
 
-                // Aplica a rotação 3D ao card ativo
                 card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
-                // Atualiza o ponto do gradiente de luz refletida
                 const percentX = ((e.clientX - rect.left) / rect.width) * 100;
                 const percentY = ((e.clientY - rect.top) / rect.height) * 100;
                 card.style.setProperty('--tx', `${percentX}%`);
                 card.style.setProperty('--ty', `${percentY}%`);
             });
 
-            // Reseta a rotação suavemente quando o usuário tira o dedo/cursor de cima
             perspectiveContainer.addEventListener('pointerleave', () => {
                 card.style.transform = 'rotateX(0deg) rotateY(0deg)';
                 card.style.setProperty('--tx', '50%');
                 card.style.setProperty('--ty', '50%');
             });
         });
+
+        // 2. RENDER DO AVATAR GEOMÉTRICO 3D (CANVAS PROCEDURAL)
+        const canvas = document.getElementById('avatar-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Configuração de Densidade de Pixel para Celular ficar super nítido
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = 180 * dpr;
+        canvas.height = 180 * dpr;
+        ctx.scale(dpr, dpr);
+
+        let rotationY = 0;
+        let rotationX = 0;
+        let targetRotationY = 0;
+        let targetRotationX = 0;
+
+        // Estrutura de pontos 3D que mapeia uma "máscara/cabeça tridimensional estrutural"
+        const points = [
+            {x: 0, y: -60, z: 0},     // Topo da cabeça
+            {x: -35, y: -30, z: 25},  // Testa Esquerda
+            {x: 35, y: -30, z: 25},   // Testa Direita
+            {x: -45, y: 10, z: 15},   // Maçã do rosto esquerdo
+            {x: 45, y: 10, z: 15},    // Maçã do rosto direito
+            {x: 0, y: 5, z: 50},      // Nariz
+            {x: -25, y: 45, z: 15},   // Mandíbula esquerda
+            {x: 25, y: 45, z: 15},    // Mandíbula direita
+            {x: 0, y: 65, z: 20},     // Queixo
+            {x: -30, y: -30, z: -35}, // Trás Esquerdo
+            {x: 30, y: -30, z: -35},  // Trás Direito
+            {x: 0, y: 30, z: -40}     // Nuca
+        ];
+
+        // Conexões de linhas para criar a malha estrutural (Wireframe)
+        const connections = [
+            [0, 1], [0, 2], [0, 9], [0, 10],
+            [1, 2], [1, 3], [1, 9],
+            [2, 4], [2, 10],
+            [3, 5], [4, 5], [3, 6], [4, 7],
+            [5, 8], [6, 8], [7, 8],
+            [6, 11], [7, 11], [9, 11], [10, 11]
+        ];
+
+        // Adiciona reação ao movimento do toque sobre a tela inteira
+        document.addEventListener('pointermove', (e) => {
+            // Usa as coordenadas de toque para inclinar o avatar no próprio eixo
+            const x = (e.clientX / window.innerWidth) - 0.5;
+            const y = (e.clientY / window.innerHeight) - 0.5;
+            targetRotationY = x * 3;
+            targetRotationX = y * 1.5;
+        });
+
+        function project(x, y, z) {
+            // Projeção básica 3D para 2D com perspectiva
+            const fov = 150;
+            const distance = 160;
+            const scale = fov / (distance + z);
+            const projX = x * scale + 90; // Centraliza no Canvas de 180x180
+            const projY = y * scale + 90;
+            return { x: projX, y: projY };
+        }
+
+        function rotateY3D(point, angle) {
+            const cos = Math.cos(angle);
+            const sin = Math.sin(angle);
+            return {
+                x: point.x * cos - point.z * sin,
+                y: point.y,
+                z: point.x * sin + point.z * cos
+            };
+        }
+
+        function rotateX3D(point, angle) {
+            const cos = Math.cos(angle);
+            const sin = Math.sin(angle);
+            return {
+                x: point.x,
+                y: point.y * cos - point.z * sin,
+                z: point.y * sin + point.z * cos
+            };
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, 180, 180);
+
+            // Suavização do movimento (Lirp)
+            rotationY += (targetRotationY - rotationY) * 0.05;
+            rotationX += (targetRotationX - rotationX) * 0.05;
+
+            // Rotação automática suave constante além da rotação do toque
+            const currentAngleY = rotationY + Date.now() * 0.0005;
+
+            const projectedPoints = points.map(p => {
+                let r = rotateY3D(p, currentAngleY);
+                r = rotateX3D(r, rotationX);
+                return project(r.x, r.y, r.z);
+            });
+
+            // Desenhar conexões de linhas (A malha estrutural)
+            ctx.strokeStyle = 'rgba(181, 153, 117, 0.25)';
+            ctx.lineWidth = 1;
+            connections.forEach(conn => {
+                const p1 = projectedPoints[conn[0]];
+                const p2 = projectedPoints[conn[1]];
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            });
+
+            // Desenhar os nós (Pontos brilhantes de luz)
+            projectedPoints.forEach(p => {
+                ctx.fillStyle = '#b59975';
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Glow do ponto
+                ctx.fillStyle = 'rgba(181, 153, 117, 0.15)';
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 7, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
     </script>
 </body>
 </html>
