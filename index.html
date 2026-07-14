@@ -3,1141 +3,320 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GitHub 3D Portfolio Playground • Designer Mode</title>
-    
-    <!-- Tailwind CSS para Estilização Ultra Rápida -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Fontes Brutalistas e Modernas -->
+    <title>Robert • Portfolio</title>
+    <!-- Fontes Premium de Alta Costura -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesque:wght@400;500;700&family=Syncopate:wght@700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     
-    <!-- Biblioteca Three.js para os Motores 3D -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Ícones Lucide para Interface Minimalista -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
     <style>
         :root {
-            --neon-primary: #FFC72C;
-            --neon-glow: rgba(255, 199, 44, 0.4);
-            --bg-ultra-dark: #070709;
+            --bg-color: #0b0b0b;
+            --bronze-warm: #b59975;
+            --text-light: #f5f5f7;
+            --text-muted: #86868b;
+            --glass-bg: rgba(18, 18, 18, 0.7);
+            --glass-border: rgba(181, 153, 117, 0.12);
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
         }
 
-        body {
-            font-family: 'Space Grotesque', sans-serif;
-            background-color: var(--bg-ultra-dark);
-            color: #f4f4f7;
-            overflow-x: hidden;
-            /* Previne comportamento elástico de scroll no iOS */
-            overscroll-behavior-y: none;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .font-brutal {
-            font-family: 'Syncopate', sans-serif;
+        body, html {
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            font-family: var(--font-sans);
+            height: 100%;
+            overflow: hidden;
         }
 
-        .font-mono {
-            font-family: 'Fira Code', monospace;
+        /* Container de Rolagem Snap (Nativo e leve) */
+        .viewport-container {
+            height: 100%;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* Efeito de Vidro Fosco (Glassmorphic) */
-        .glass-panel {
-            background: rgba(19, 19, 25, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-
-        .glass-panel-accent {
-            background: rgba(19, 19, 25, 0.85);
-            border: 1px solid var(--neon-primary);
-            box-shadow: 0 0 20px var(--neon-glow);
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0d0d11;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #24242e;
-            border-radius: 99px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--neon-primary);
-        }
-
-        /* Efeito Scanlines CRT para o Terminal */
-        .scanlines {
+        /* Cada seção ocupa exatamente uma tela de celular */
+        section {
+            height: 100vh;
+            width: 100vw;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
             position: relative;
             overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 30%, rgba(181, 153, 117, 0.06) 0%, transparent 60%);
         }
-        .scanlines::before {
-            content: " ";
-            display: block;
+
+        /* Textura sutil de concreto/ruído de fundo */
+        section::after {
+            content: '';
             position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-            z-index: 10;
-            background-size: 100% 4px, 6px 100%;
+            inset: 0;
+            opacity: 0.02;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Moldura de Design Superior */
+        header {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            right: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
             pointer-events: none;
         }
 
-        /* Animações e Transições Suaves */
-        .card-tilt {
+        .designer-brand {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            color: var(--text-light);
+            pointer-events: auto;
+        }
+
+        .scroll-indicator {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--bronze-warm);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Container de Perspectiva 3D */
+        .card-perspective {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 340px;
+            aspect-ratio: 10 / 14;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* O Card Sensorial */
+        .sensory-card {
+            width: 100%;
+            height: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             transform-style: preserve-3d;
-            transition: transform 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
-            will-change: transform;
+            transition: transform 0.15s ease-out;
+            box-shadow: 
+                0 30px 60px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+            position: relative;
         }
 
-        .shimmer {
-            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0) 100%);
-            background-size: 200% 100%;
-            animation: shimmer 4s infinite;
+        /* Brilho reflexivo interno do card */
+        .sensory-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            background: radial-gradient(circle at var(--tx, 50%) var(--ty, 50%), rgba(181, 153, 117, 0.1) 0%, transparent 50%);
+            pointer-events: none;
         }
 
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+        /* Estética do Conteúdo do Card */
+        .card-number {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            color: var(--bronze-warm);
+            text-transform: uppercase;
         }
 
-        /* Impedir seleção de conteúdo durante gestos no celular */
-        .no-select {
-            -webkit-user-select: none;
-            user-select: none;
+        .card-main h2 {
+            font-family: var(--font-serif);
+            font-size: 2.2rem;
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 12px;
+            transform: translateZ(30px); /* Efeito parallax interno */
+        }
+
+        .card-main p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            transform: translateZ(15px);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 20px;
+            transform: translateZ(20px);
+        }
+
+        .card-action {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Indicadores de Status Macios */
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--bronze-warm);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--bronze-warm);
+        }
+
+        /* Instrução de Usabilidade Invisível / Intuitiva */
+        .swipe-hint {
+            position: absolute;
+            bottom: 40px;
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            animation: bounce 2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); opacity: 0.4; }
+            50% { transform: translateY(-6px); opacity: 0.8; }
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-yellow-500 selection:text-black">
+<body>
 
-    <!-- Barra Superior de Navegação -->
-    <header class="border-b border-zinc-800 bg-black/85 backdrop-blur-md sticky top-0 z-50 px-4 md:px-8 py-3.5 flex flex-row justify-between items-center gap-4">
-        <div class="flex items-center gap-3">
-            <div class="w-9 h-9 md:w-10 md:h-10 bg-yellow-400 rounded-lg flex items-center justify-center text-black font-bold text-lg md:text-xl shadow-lg shadow-yellow-400/20">
-                <i data-lucide="layout-template" class="w-5 h-5 md:w-6 md:h-6"></i>
-            </div>
-            <div>
-                <h1 class="text-sm md:text-lg font-bold tracking-tight font-brutal uppercase text-white flex items-center gap-2">
-                    GitHub Pages <span class="text-yellow-400">3D</span>
-                </h1>
-                <p class="text-[10px] md:text-xs text-zinc-400">Designer Interativo em Tempo Real</p>
-            </div>
-        </div>
-        <div class="flex items-center gap-2">
-            <span class="text-[10px] bg-zinc-800 text-zinc-300 px-2.5 py-1.5 rounded-full font-mono flex items-center gap-1.5 border border-zinc-700">
-                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Mobile-Optimized
-            </span>
-        </div>
+    <!-- Header Fixo -->
+    <header>
+        <div class="designer-brand">ROBERT</div>
+        <div class="scroll-indicator">Portfolio</div>
     </header>
 
-    <!-- Barra Dinâmica de Abas de Navegação (Somente Mobile/Tablet) -->
-    <div class="lg:hidden flex bg-zinc-950 border-b border-zinc-800 p-2 sticky top-[69px] z-40 gap-2 w-full no-select">
-        <button id="mobile-tab-edit" onclick="setMobileTab('edit')" class="flex-1 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 bg-yellow-400 text-black">
-            <i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Ajustes
-        </button>
-        <button id="mobile-tab-view" onclick="setMobileTab('view')" class="flex-1 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 border border-zinc-800 text-zinc-400 bg-transparent">
-            <i data-lucide="eye" class="w-4 h-4"></i> Preview 3D
-        </button>
-    </div>
+    <!-- Container do Viewport com Snap Scroll -->
+    <div class="viewport-container">
 
-    <!-- Grid Principal de Trabalho -->
-    <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 md:p-6 max-w-[1600px] w-full mx-auto relative">
-        
-        <!-- PAINEL DA ESQUERDA: Customizador / Painel do Designer (4 Colunas) -->
-        <section id="customizer-panel" class="lg:col-span-4 flex flex-col gap-5 max-lg:pb-12">
-            
-            <!-- Etapa 1: Escolha do Arquétipo -->
-            <div class="glass-panel rounded-2xl p-5">
-                <div class="flex items-center gap-2 mb-4">
-                    <span class="w-6 h-6 bg-yellow-400 text-black rounded-full flex items-center justify-center text-xs font-bold font-brutal">1</span>
-                    <h2 class="font-brutal text-[10px] tracking-wider text-zinc-300 uppercase">Escolha o Conceito</h2>
-                </div>
-                <div class="flex flex-col gap-3">
-                    <!-- Opção 1: Dev Card 3D -->
-                    <button id="tab-card" onclick="switchConcept('card')" class="w-full text-left p-3 rounded-xl border-2 border-yellow-400 bg-yellow-400/5 hover:bg-yellow-400/10 transition flex items-center justify-between group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-lg bg-zinc-800 group-hover:bg-yellow-400 group-hover:text-black flex items-center justify-center text-zinc-400 transition shrink-0">
-                                <i data-lucide="contact-2" class="w-4 h-4"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-xs text-white group-hover:text-yellow-400 transition">Card Holográfico 3D</h3>
-                                <p class="text-[10px] text-zinc-400">Efeito glassmorphism metálico</p>
-                            </div>
-                        </div>
-                        <i data-lucide="chevron-right" class="text-zinc-500 group-hover:text-yellow-400 transition shrink-0"></i>
-                    </button>
-
-                    <!-- Opção 2: Constelação WebGL -->
-                    <button id="tab-stars" onclick="switchConcept('stars')" class="w-full text-left p-3 rounded-xl border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800/30 transition flex items-center justify-between group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-lg bg-zinc-800 group-hover:bg-purple-500 group-hover:text-white flex items-center justify-center text-zinc-400 transition shrink-0">
-                                <i data-lucide="orbit" class="w-4 h-4"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-xs text-white group-hover:text-purple-400 transition">Constelação Interativa</h3>
-                                <p class="text-[10px] text-zinc-400">Galeria orbital acelerada por GPU</p>
-                            </div>
-                        </div>
-                        <i data-lucide="chevron-right" class="text-zinc-500 group-hover:text-purple-400 transition shrink-0"></i>
-                    </button>
-
-                    <!-- Opção 3: Terminal Cyberpunk -->
-                    <button id="tab-cyber" onclick="switchConcept('cyber')" class="w-full text-left p-3 rounded-xl border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800/30 transition flex items-center justify-between group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-lg bg-zinc-800 group-hover:bg-emerald-500 group-hover:text-black flex items-center justify-center text-zinc-400 transition shrink-0">
-                                <i data-lucide="terminal" class="w-4 h-4"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-xs text-white group-hover:text-emerald-400 transition">Terminal Hack Retrô</h3>
-                                <p class="text-[10px] text-zinc-400">Monitores CRT com malhas táticas</p>
-                            </div>
-                        </div>
-                        <i data-lucide="chevron-right" class="text-zinc-500 group-hover:text-emerald-400 transition shrink-0"></i>
-                    </button>
+        <!-- TELA 1: CAPA -->
+        <section>
+            <div class="card-perspective">
+                <div class="sensory-card">
+                    <div class="card-number">01 // CONCEITO</div>
+                    <div class="card-main">
+                        <h2>Espaço,<br>Identidade<br>& Luxo.</h2>
+                        <p>Design de ambientes desenhado sob a perspectiva do minimalismo industrial, materiais autênticos e atmosfera cênica.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-action">Role para explorar</span>
+                        <div class="status-dot"></div>
+                    </div>
                 </div>
             </div>
+            <div class="swipe-hint">Deslize para cima</div>
+        </section>
 
-            <!-- Etapa 2: Customizador de Variáveis -->
-            <div class="glass-panel rounded-2xl p-5 flex-1 flex flex-col">
-                <div class="flex items-center gap-2 mb-5">
-                    <span class="w-6 h-6 bg-yellow-400 text-black rounded-full flex items-center justify-center text-xs font-bold font-brutal">2</span>
-                    <h2 class="font-brutal text-[10px] tracking-wider text-zinc-300 uppercase">Ajuste os Parâmetros</h2>
-                </div>
-
-                <!-- Formulário com Controles Dinâmicos e Toques Amplos -->
-                <div class="space-y-5 flex-1 pr-1">
-                    
-                    <!-- Campo Texto do Nome -->
-                    <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-2">Seu Nome / Título</label>
-                        <input type="text" id="param-name" value="ALEX SILVA" oninput="updateParams()" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-white font-mono focus:outline-none focus:border-yellow-400 transition text-sm">
+        <!-- TELA 2: PROJETO INDUSTRIAL ORGANIC -->
+        <section>
+            <div class="card-perspective">
+                <div class="sensory-card">
+                    <div class="card-number">02 // PROJETO</div>
+                    <div class="card-main">
+                        <h2>Industrial<br>Organic.</h2>
+                        <p>A união entre a brutalidade do concreto aparente e a sofisticação calorosa da madeira nobre e da vegetação interna.</p>
                     </div>
-
-                    <!-- Campo Subtítulo / Tag -->
-                    <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-2">Sua Especialidade Principal</label>
-                        <input type="text" id="param-sub" value="CREATIVE TECH DEVELOPER" oninput="updateParams()" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-white font-mono focus:outline-none focus:border-yellow-400 transition text-sm">
+                    <div class="card-footer">
+                        <a href="#" class="card-action">Ver detalhes do espaço</a>
+                        <div class="status-dot"></div>
                     </div>
-
-                    <!-- Seletor de Cores de Acento -->
-                    <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-2">Cor de Acento (Neon)</label>
-                        <div class="grid grid-cols-4 gap-2">
-                            <button onclick="setColor('#FFC72C', 'rgba(255, 199, 44, 0.4)')" class="h-10 rounded-lg bg-yellow-400 border-2 border-white/20 hover:border-white transition cursor-pointer" aria-label="Amarelo"></button>
-                            <button onclick="setColor('#8B5CF6', 'rgba(139, 92, 246, 0.4)')" class="h-10 rounded-lg bg-purple-500 border-2 border-white/20 hover:border-white transition cursor-pointer" aria-label="Roxo"></button>
-                            <button onclick="setColor('#10B981', 'rgba(16, 185, 129, 0.4)')" class="h-10 rounded-lg bg-emerald-500 border-2 border-white/20 hover:border-white transition cursor-pointer" aria-label="Verde"></button>
-                            <button onclick="setColor('#3B82F6', 'rgba(59, 130, 246, 0.4)')" class="h-10 rounded-lg bg-blue-500 border-2 border-white/20 hover:border-white transition cursor-pointer" aria-label="Azul"></button>
-                        </div>
-                    </div>
-
-                    <!-- Slider: Densidade de Partículas (Toque Largo) -->
-                    <div class="py-1">
-                        <div class="flex justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-2">
-                            <span>Densidade das Partículas 3D</span>
-                            <span id="label-particles-val" class="text-yellow-400 font-mono">150</span>
-                        </div>
-                        <input type="range" id="param-particles" min="50" max="400" step="10" value="150" oninput="updateParams()" class="w-full h-2 bg-zinc-850 rounded-lg appearance-none cursor-pointer accent-yellow-400 py-2">
-                    </div>
-
-                    <!-- Slider: Giro / Sensibilidade (Toque Largo) -->
-                    <div class="py-1">
-                        <div class="flex justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-2">
-                            <span>Sensibilidade de Giro 3D</span>
-                            <span id="label-speed-val" class="text-yellow-400 font-mono">1.0x</span>
-                        </div>
-                        <input type="range" id="param-speed" min="0.2" max="2.5" step="0.1" value="1.0" oninput="updateParams()" class="w-full h-2 bg-zinc-850 rounded-lg appearance-none cursor-pointer accent-yellow-400 py-2">
-                    </div>
-
-                    <!-- Seletor de Fundo de Padrão Brutal -->
-                    <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-wider text-zinc-400 mb-2">Padrão Tático do Fundo</label>
-                        <select id="param-pattern" onchange="updateParams()" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-yellow-400 transition cursor-pointer">
-                            <option value="dots">Grade Circular Minimalista</option>
-                            <option value="grid">Malha de Construção Técnica</option>
-                            <option value="radial">Halo Orbital de Alta Energia</option>
-                        </select>
-                    </div>
-
                 </div>
             </div>
         </section>
 
-        <!-- PAINEL DA DIREITA: Visualizador do Portfólio & Área de Prévia (8 Colunas) -->
-        <section id="preview-panel" class="lg:col-span-8 flex flex-col gap-6 max-lg:hidden">
-            
-            <!-- Janela de Preview Interativo -->
-            <div class="glass-panel rounded-3xl overflow-hidden flex flex-col relative min-h-[420px] md:min-h-[550px] shadow-2xl">
-                
-                <!-- Header Estilo Mac/Linux Window -->
-                <div class="bg-black/80 px-5 py-3 border-b border-zinc-800 flex justify-between items-center z-20">
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-2.5 h-2.5 bg-red-500 rounded-full inline-block"></span>
-                        <span class="w-2.5 h-2.5 bg-yellow-500 rounded-full inline-block"></span>
-                        <span class="w-2.5 h-2.5 bg-green-500 rounded-full inline-block"></span>
-                        <span class="text-[10px] font-mono text-zinc-500 ml-1.5 truncate max-w-[150px] sm:max-w-none">username.github.io/portfolio</span>
+        <!-- TELA 3: DIRETRIZ ESTRATÉGICA -->
+        <section>
+            <div class="card-perspective">
+                <div class="sensory-card">
+                    <div class="card-number">03 // SISTEMA</div>
+                    <div class="card-main">
+                        <h2>Design<br>Estratégico.</h2>
+                        <p>A engenharia do espaço físico projetada para otimizar fluxos comerciais, gerar experiências sensoriais e consolidar marcas de luxo.</p>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <span class="text-[10px] bg-zinc-900 text-zinc-450 border border-zinc-800 px-2 py-0.5 rounded font-mono flex items-center gap-1 no-select">
-                            <i data-lucide="eye" class="w-3 h-3 text-yellow-400"></i> Ativo
-                        </span>
+                    <div class="card-footer">
+                        <a href="#" class="card-action">Explorar metodologia</a>
+                        <div class="status-dot"></div>
                     </div>
-                </div>
-
-                <!-- Área do Canvas e Visualizador Dinâmico (touch-action none para impedir scrolls na tela geral) -->
-                <div class="flex-1 relative flex items-center justify-center overflow-hidden min-h-[350px] sm:min-h-[420px]" id="viewport" style="touch-action: none;">
-                    
-                    <!-- Canvas de Fundo de Partículas Globais Three.js -->
-                    <canvas id="canvas-three" class="absolute inset-0 w-full h-full pointer-events-auto" style="touch-action: none;"></canvas>
-
-                    <!-- Camada de Overlay com Padrão Brutal selecionado -->
-                    <div id="grid-overlay" class="absolute inset-0 pointer-events-none transition-all duration-300"></div>
-
-                    <!-- PREVIEW CONCEITO 1: CARD HOLOGRÁFICO 3D (touch-action impede que arraste no card role a página do celular) -->
-                    <div id="preview-card" class="relative z-10 w-full max-w-[290px] sm:max-w-[340px] aspect-[1/1.55] cursor-grab active:cursor-grabbing transition-opacity duration-300 pointer-events-auto select-none" style="touch-action: none;">
-                        <div id="card-inner" class="card-tilt glass-panel w-full h-full rounded-2xl border border-zinc-800 relative flex flex-col justify-between p-5 sm:p-6 shadow-2xl overflow-hidden">
-                            
-                            <!-- Efeito Shimmer metálico que reage à inclinação -->
-                            <div id="card-sheen" class="absolute inset-0 pointer-events-none z-10 opacity-30 mix-blend-color-dodge"></div>
-                            
-                            <!-- Topo do Card -->
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <span class="text-[8px] font-brutal tracking-widest text-zinc-500 uppercase block">Creative Ticket</span>
-                                    <span id="preview-accent-tag" class="text-[9px] font-mono tracking-wider font-bold bg-yellow-400 text-black px-2 py-0.5 rounded-full mt-1 inline-block">DEV_PORTFOLIO</span>
-                                </div>
-                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-zinc-700 bg-zinc-900 flex items-center justify-center">
-                                    <i data-lucide="cpu" class="w-3.5 h-3.5 text-zinc-400"></i>
-                                </div>
-                            </div>
-
-                            <!-- Miolo do Card -->
-                            <div class="my-4 sm:my-6">
-                                <span class="text-[9px] font-mono text-zinc-500 block mb-0.5">DESIGNER IN CHARGE</span>
-                                <h3 id="preview-card-name" class="font-brutal text-lg sm:text-2xl font-bold leading-none text-white uppercase tracking-wider">
-                                    ALEX SILVA
-                                </h3>
-                                <p id="preview-card-sub" class="text-[10px] sm:text-xs text-zinc-400 font-mono mt-1.5 sm:mt-2 tracking-tight">
-                                    CREATIVE TECH DEVELOPER
-                                </p>
-                            </div>
-
-                            <!-- Rodapé / Canhoto -->
-                            <div class="border-t border-zinc-800/80 pt-4 sm:pt-5 flex justify-between items-center">
-                                <div class="flex flex-col">
-                                    <span class="text-[8px] text-zinc-500 tracking-wider">STATUS DO SERVIDOR</span>
-                                    <span class="text-[10px] sm:text-xs font-bold text-green-400 flex items-center gap-1 mt-0.5">
-                                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> DISPONÍVEL
-                                    </span>
-                                </div>
-                                <div class="flex flex-col items-end">
-                                    <div class="w-16 sm:w-20 h-6 sm:h-7 opacity-75" style="background: repeating-linear-gradient(90deg, #fff, #fff 1px, transparent 1px, transparent 4px);"></div>
-                                    <span class="text-[7px] sm:text-[8px] font-mono text-zinc-600 mt-1 uppercase">09 13 418 2026</span>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <!-- PREVIEW CONCEITO 2: CONSTELAÇÃO (Dica Visual na tela) -->
-                    <div id="preview-stars" class="absolute bottom-5 left-5 right-5 z-10 glass-panel px-3.5 py-2.5 rounded-xl border border-zinc-800 flex items-center gap-2.5 pointer-events-none opacity-0 transition-opacity duration-300">
-                        <div class="w-2 h-2 rounded-full bg-purple-500 animate-ping shrink-0"></div>
-                        <span class="text-[10px] text-zinc-300 font-mono leading-tight">Deslize para rotacionar o universo em 3D</span>
-                    </div>
-
-                    <!-- PREVIEW CONCEITO 3: TERMINAL CYBERPUNK OVERLAYS -->
-                    <div id="preview-cyber" class="absolute inset-0 z-10 flex flex-col justify-between p-4 sm:p-6 pointer-events-none opacity-0 transition-opacity duration-300 scanlines">
-                        <div class="flex justify-between items-start w-full">
-                            <div class="glass-panel px-2.5 py-1 rounded-lg border border-zinc-800 text-[10px] font-mono text-emerald-400">
-                                SYS.STATUS: ONLINE
-                            </div>
-                            <div class="glass-panel px-2.5 py-1 rounded-lg border border-zinc-800 text-[10px] font-mono text-zinc-400">
-                                GRID: ACTV
-                            </div>
-                        </div>
-
-                        <!-- Console Mock de Saída -->
-                        <div class="w-full max-w-[340px] glass-panel p-3.5 rounded-xl border border-zinc-800 font-mono text-[10px] text-emerald-400 space-y-1.5 select-none self-start mt-4">
-                            <p class="text-zinc-500">> Loading security protocols...</p>
-                            <p class="text-emerald-500 font-bold">> SECURITY BYPASS SUCCESSFUL.</p>
-                            <p id="preview-cyber-welcome">> WELCOME, USER. VISITOR: <span class="text-white font-bold uppercase">ALEX SILVA</span></p>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Rodapé da Janela de Prévia / Painel de Exportação -->
-                <div class="bg-zinc-950 px-5 py-4 border-t border-zinc-800 flex flex-col sm:flex-row justify-between items-center gap-3.5 z-20">
-                    <div class="text-center sm:text-left">
-                        <span class="text-[10px] text-zinc-500 font-mono block">Código único autogerado</span>
-                        <span class="text-xs font-bold text-white uppercase">Pronto para hospedar grátis</span>
-                    </div>
-                    <button onclick="copyBoilerplate()" class="w-full sm:w-auto bg-yellow-400 hover:bg-yellow-500 text-black px-5 py-3 rounded-xl font-bold font-brutal text-[10px] tracking-wider uppercase transition-all flex items-center justify-center gap-2 shadow-lg shadow-yellow-400/10 active:scale-95">
-                        <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar Código Portfólio
-                    </button>
                 </div>
             </div>
-
-            <!-- Dicas de Instalação no GitHub Pages -->
-            <div class="glass-panel rounded-2xl p-4 flex items-start gap-3.5">
-                <div class="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 shrink-0">
-                    <i data-lucide="github" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <h4 class="font-bold text-xs text-white">Como lançar seu site 3D grátis:</h4>
-                    <p class="text-[10px] text-zinc-400 mt-1 leading-relaxed">
-                        Crie um repositório no seu GitHub chamado <code class="bg-zinc-900 text-yellow-400 font-mono px-1 py-0.5 rounded border border-zinc-800 text-[10px]">seu-usuario.github.io</code>, salve o código copiado num arquivo <code class="bg-zinc-900 text-yellow-400 font-mono px-1 py-0.5 rounded border border-zinc-800 text-[10px]">index.html</code> e publique. Seu portfólio 3D estará no ar!
-                    </p>
-                </div>
-            </div>
-
         </section>
-    </main>
 
-    <!-- Toast de Notificação (Alternativa segura a alerts) -->
-    <div id="toast-notify" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 sm:max-w-md z-[9999] bg-emerald-500 text-black px-4 py-3.5 rounded-xl font-bold font-brutal text-[10px] tracking-wider uppercase shadow-2xl shadow-emerald-500/20 flex items-center justify-between gap-3 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none">
-        <div class="flex items-center gap-2">
-            <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
-            <span id="toast-message">CÓDIGO COPIADO COM SUCESSO!</span>
-        </div>
-        <button onclick="dismissToast()" class="text-black/65 hover:text-black font-bold text-xs px-2 shrink-0">&times;</button>
     </div>
 
+    <!-- Script de Movimentação Sensorial Isolada -->
     <script>
-        // Inicializar ícones da biblioteca Lucide
-        lucide.createIcons();
+        const cards = document.querySelectorAll('.sensory-card');
 
-        // Parâmetros Globais do Estado
-        let activeConcept = 'card'; // 'card', 'stars', 'cyber'
-        let accentColor = '#FFC72C';
-        let accentGlow = 'rgba(255, 199, 44, 0.4)';
-        let starsCount = 150;
-        let speedMultiplier = 1.0;
-        let activePattern = 'dots';
+        cards.forEach(card => {
+            const perspectiveContainer = card.parentElement;
 
-        // Variáveis de Toque para Orbitação do Canvas 3D
-        let isDraggingCanvas = false;
-        let previousTouchX = 0;
-        let previousTouchY = 0;
-        let rotationTargetY = 0;
-        let rotationTargetX = 0;
-
-        // Elementos de Dom
-        const previewCard = document.getElementById('preview-card');
-        const previewStars = document.getElementById('preview-stars');
-        const previewCyber = document.getElementById('preview-cyber');
-        
-        const tabCard = document.getElementById('tab-card');
-        const tabStars = document.getElementById('tab-stars');
-        const tabCyber = document.getElementById('tab-cyber');
-
-        const cardInner = document.getElementById('card-inner');
-        const cardSheen = document.getElementById('card-sheen');
-        const gridOverlay = document.getElementById('grid-overlay');
-
-        const toast = document.getElementById('toast-notify');
-        const toastMessage = document.getElementById('toast-message');
-
-        const customizerPanel = document.getElementById('customizer-panel');
-        const previewPanel = document.getElementById('preview-panel');
-
-        // Inicialização do Motor Three.js para o Preview
-        const canvas = document.getElementById('canvas-three');
-        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-        
-        // LIMITAÇÃO DE PIXEL RATIO PARA MOBILE (Previne superaquecimento)
-        const isMobile = window.innerWidth < 1024;
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
-        
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-        camera.position.set(0, 0, 26);
-
-        let particleSystem, meshObject;
-
-        // Configura objetos na cena dependendo do arquétipo escolhido
-        const setupThreeScene = () => {
-            // Limpa itens antigos da cena
-            while(scene.children.length > 0){ 
-                scene.remove(scene.children[0]); 
-            }
-
-            // Luzes básicas para relevo de materiais tridimensionais
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.45);
-            scene.add(ambientLight);
-
-            const pointLight = new THREE.PointLight(0xffffff, 0.9);
-            pointLight.position.set(10, 10, 15);
-            scene.add(pointLight);
-
-            if (activeConcept === 'card') {
-                // Modo Card: Fundo com poeira estelar suave rotacionando
-                const pGeometry = new THREE.BufferGeometry();
-                const count = Math.min(starsCount * 2, 400); // Teto de performance no mobile
-                const positions = new Float32Array(count * 3);
-
-                for (let i = 0; i < count * 3; i += 3) {
-                    positions[i] = (Math.random() - 0.5) * 50;
-                    positions[i+1] = (Math.random() - 0.5) * 50;
-                    positions[i+2] = (Math.random() - 0.5) * 50;
-                }
-
-                pGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-                const pMaterial = new THREE.PointsMaterial({
-                    color: new THREE.Color(accentColor),
-                    size: isMobile ? 0.2 : 0.15,
-                    transparent: true,
-                    opacity: 0.5
-                });
-
-                particleSystem = new THREE.Points(pGeometry, pMaterial);
-                scene.add(particleSystem);
-
-            } else if (activeConcept === 'stars') {
-                // Modo Constelação: Malha de satélites brilhantes
-                const pGeometry = new THREE.BufferGeometry();
-                const count = Math.min(starsCount, 250);
-                const positions = new Float32Array(count * 3);
-                const colors = new Float32Array(count * 3);
-
-                const baseCol = new THREE.Color(accentColor);
-
-                for (let i = 0; i < count * 3; i += 3) {
-                    // Distribuição orbital ao redor do núcleo
-                    const radius = 6 + Math.random() * 8;
-                    const angle = Math.random() * Math.PI * 2;
-                    positions[i] = Math.cos(angle) * radius;
-                    positions[i+1] = (Math.random() - 0.5) * 4;
-                    positions[i+2] = Math.sin(angle) * radius;
-
-                    // Pequenas variações harmônicas de tons
-                    colors[i] = baseCol.r * (0.8 + Math.random() * 0.2);
-                    colors[i+1] = baseCol.g * (0.8 + Math.random() * 0.2);
-                    colors[i+2] = baseCol.b * (0.8 + Math.random() * 0.2);
-                }
-
-                pGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-                pGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-                const pMaterial = new THREE.PointsMaterial({
-                    size: isMobile ? 0.35 : 0.25,
-                    vertexColors: true,
-                    transparent: true,
-                    opacity: 0.85
-                });
-
-                particleSystem = new THREE.Points(pGeometry, pMaterial);
-                scene.add(particleSystem);
-
-                // Adiciona um Núcleo Gravitacional Central (Estrela principal)
-                const coreGeo = new THREE.SphereGeometry(1.5, isMobile ? 16 : 32, isMobile ? 16 : 32);
-                const coreMat = new THREE.MeshPhongMaterial({
-                    color: new THREE.Color(accentColor),
-                    emissive: new THREE.Color(accentColor),
-                    emissiveIntensity: 0.5,
-                    shininess: 80
-                });
-                meshObject = new THREE.Mesh(coreGeo, coreMat);
-                scene.add(meshObject);
-
-            } else if (activeConcept === 'cyber') {
-                // Modo Cyber: Malha Wireframe Geométrica rotacionando sob grade tática
-                const shapeGeo = new THREE.TorusKnotGeometry(4.2, 1.0, isMobile ? 64 : 120, 12);
-                const shapeMat = new THREE.MeshBasicMaterial({
-                    color: new THREE.Color(accentColor),
-                    wireframe: true,
-                    transparent: true,
-                    opacity: 0.4
-                });
-                meshObject = new THREE.Mesh(shapeGeo, shapeMat);
-                scene.add(meshObject);
-
-                // Rede de computadores tática estática ao fundo
-                const pGeometry = new THREE.BufferGeometry();
-                const count = 70;
-                const positions = new Float32Array(count * 3);
-                for (let i = 0; i < count * 3; i += 3) {
-                    positions[i] = (Math.random() - 0.5) * 40;
-                    positions[i+1] = (Math.random() - 0.5) * 40;
-                    positions[i+2] = (Math.random() - 0.5) * 40;
-                }
-                pGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-                const pMaterial = new THREE.PointsMaterial({
-                    color: 0x44444d,
-                    size: 0.1,
-                    transparent: true,
-                    opacity: 0.4
-                });
-                particleSystem = new THREE.Points(pGeometry, pMaterial);
-                scene.add(particleSystem);
-            }
-        };
-
-        // Altera aba de visualização exclusiva do Celular
-        const setMobileTab = (tabName) => {
-            const btnEdit = document.getElementById('mobile-tab-edit');
-            const btnView = document.getElementById('mobile-tab-view');
-
-            if (tabName === 'edit') {
-                customizerPanel.classList.remove('max-lg:hidden');
-                previewPanel.classList.add('max-lg:hidden');
-
-                // Estilos botões
-                btnEdit.className = "flex-1 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 bg-yellow-400 text-black";
-                btnView.className = "flex-1 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 border border-zinc-800 text-zinc-400 bg-transparent";
-            } else {
-                customizerPanel.classList.add('max-lg:hidden');
-                previewPanel.classList.remove('max-lg:hidden');
-
-                // Estilos botões
-                btnEdit.className = "flex-1 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 border border-zinc-800 text-zinc-400 bg-transparent";
-                btnView.className = "flex-1 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 bg-yellow-400 text-black";
+            // Ativa o movimento tanto no toque quanto no mouse
+            perspectiveContainer.addEventListener('pointermove', (e) => {
+                const rect = perspectiveContainer.getBoundingClientRect();
                 
-                // Forçar redimensionamento da janela de renderização WebGL ao abrir aba
-                setTimeout(resizeWebGL, 50);
-            }
-        };
+                // Calcula a posição do toque relativa ao centro do contêiner do card
+                const x = e.clientX - rect.left - (rect.width / 2);
+                const y = e.clientY - rect.top - (rect.height / 2);
+                
+                // Limita a rotação máxima para não quebrar a legibilidade (máximo 15 graus)
+                const rotateX = -(y / (rect.height / 2)) * 15;
+                const rotateY = (x / (rect.width / 2)) * 15;
 
-        // Sincroniza controles com a prévia
-        const updateParams = () => {
-            const name = document.getElementById('param-name').value;
-            const sub = document.getElementById('param-sub').value;
-            starsCount = parseInt(document.getElementById('param-particles').value);
-            speedMultiplier = parseFloat(document.getElementById('param-speed').value);
-            activePattern = document.getElementById('param-pattern').value;
+                // Aplica a rotação 3D ao card ativo
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
-            // Atualiza indicadores de texto da interface
-            document.getElementById('label-particles-val').textContent = starsCount;
-            document.getElementById('label-speed-val').textContent = speedMultiplier.toFixed(1) + 'x';
-
-            // Atualizar textos dos elementos de Preview
-            document.getElementById('preview-card-name').textContent = name || "NOME DO CLIENTE";
-            document.getElementById('preview-card-sub').textContent = sub || "ESPECIALIDADE";
-            document.getElementById('preview-cyber-welcome').innerHTML = `> WELCOME, USER. VISITOR: <span class="text-white font-bold uppercase">${name || "ALEX SILVA"}</span>`;
-
-            // Aplicar Estilos de Cor Dinâmicos para Tags
-            const tag = document.getElementById('preview-accent-tag');
-            tag.style.backgroundColor = accentColor;
-            tag.style.color = (accentColor === '#FFC72C') ? '#000' : '#fff';
-
-            // Recriar Fundo Tático (Grid Brutal)
-            applyPatternOverlay();
-
-            // Reconfigurar Cena 3D para renderizar com os novos limites
-            setupThreeScene();
-        };
-
-        const applyPatternOverlay = () => {
-            if (activePattern === 'dots') {
-                gridOverlay.style.backgroundImage = `radial-gradient(circle, ${accentColor}11 1px, transparent 1.5px)`;
-                gridOverlay.style.backgroundSize = '24px 24px';
-            } else if (activePattern === 'grid') {
-                gridOverlay.style.backgroundImage = `linear-gradient(${accentColor}09 1px, transparent 1px), linear-gradient(90deg, ${accentColor}09 1px, transparent 1px)`;
-                gridOverlay.style.backgroundSize = '30px 30px';
-            } else if (activePattern === 'radial') {
-                gridOverlay.style.backgroundImage = `radial-gradient(circle at 50% 50%, ${accentColor}1e 0%, transparent 70%)`;
-                gridOverlay.style.backgroundSize = '100% 100%';
-            }
-        };
-
-        // Troca de Paleta cromática
-        const setColor = (hex, glow) => {
-            accentColor = hex;
-            accentGlow = glow;
-            document.documentElement.style.setProperty('--neon-primary', hex);
-            document.documentElement.style.setProperty('--neon-glow', glow);
-            updateParams();
-        };
-
-        // Troca de Abas do Menu de Conceitos de Portfólio
-        const switchConcept = (concept) => {
-            activeConcept = concept;
-            
-            // Ajustar visual das abas
-            [tabCard, tabStars, tabCyber].forEach(tab => {
-                tab.classList.remove('border-yellow-400', 'bg-yellow-400/5', 'border-2');
-                tab.classList.add('border-zinc-800', 'bg-zinc-900/50');
+                // Atualiza o ponto do gradiente de luz refletida
+                const percentX = ((e.clientX - rect.left) / rect.width) * 100;
+                const percentY = ((e.clientY - rect.top) / rect.height) * 100;
+                card.style.setProperty('--tx', `${percentX}%`);
+                card.style.setProperty('--ty', `${percentY}%`);
             });
 
-            // Reseta opacidades dos previews
-            previewCard.classList.add('opacity-0', 'pointer-events-none');
-            previewStars.classList.add('opacity-0');
-            previewCyber.classList.add('opacity-0');
-
-            if (concept === 'card') {
-                tabCard.classList.add('border-yellow-400', 'bg-yellow-400/5', 'border-2');
-                tabCard.classList.remove('border-zinc-800', 'bg-zinc-900/50');
-                previewCard.classList.remove('opacity-0', 'pointer-events-none');
-            } else if (concept === 'stars') {
-                tabStars.classList.add('border-yellow-400', 'bg-yellow-400/5', 'border-2');
-                tabStars.classList.remove('border-zinc-800', 'bg-zinc-900/50');
-                previewStars.classList.remove('opacity-0');
-            } else if (concept === 'cyber') {
-                tabCyber.classList.add('border-yellow-400', 'bg-yellow-400/5', 'border-2');
-                tabCyber.classList.remove('border-zinc-800', 'bg-zinc-900/50');
-                previewCyber.classList.remove('opacity-0');
-            }
-
-            updateParams();
-        };
-
-        // Mecanismo Giroscópico / Toque 3D para o Preview de Card (Unificado Pointer)
-        const handleCardTilt = (clientX, clientY) => {
-            const rect = previewCard.getBoundingClientRect();
-            
-            const x = clientX - rect.left - (rect.width / 2);
-            const y = clientY - rect.top - (rect.height / 2);
-            
-            // Ângulo de inclinação calibrado de forma suave para telas móveis
-            const rotateX = -(y / (rect.height / 2)) * 18; 
-            const rotateY = (x / (rect.width / 2)) * 18;
-
-            cardInner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-            
-            // Posicionar o sheen metálico sob o foco do ponteiro
-            const px = (clientX - rect.left) / rect.width * 100;
-            const py = (clientY - rect.top) / rect.height * 100;
-            cardSheen.style.background = `radial-gradient(circle at ${px}% ${py}%, rgba(255, 255, 255, 0.4) 0%, transparent 60%)`;
-        };
-
-        const resetCardTilt = () => {
-            cardInner.style.transform = 'rotateX(0deg) rotateY(0deg)';
-            cardSheen.style.background = 'none';
-        };
-
-        // Eventos Unificados de pointer para Mouse e Touch de Celulares
-        previewCard.addEventListener('pointermove', (e) => {
-            handleCardTilt(e.clientX, e.clientY);
+            // Reseta a rotação suavemente quando o usuário tira o dedo/cursor de cima
+            perspectiveContainer.addEventListener('pointerleave', () => {
+                card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+                card.style.setProperty('--tx', '50%');
+                card.style.setProperty('--ty', '50%');
+            });
         });
-
-        previewCard.addEventListener('pointerleave', resetCardTilt);
-        previewCard.addEventListener('pointerup', resetCardTilt);
-
-        // ROTAÇÃO DE CENA VIA DRAG/TOUCH NO CANVAS (Swipe para orbitar constelação)
-        canvas.addEventListener('pointerdown', (e) => {
-            isDraggingCanvas = true;
-            previousTouchX = e.clientX;
-            previousTouchY = e.clientY;
-        });
-
-        window.addEventListener('pointermove', (e) => {
-            if (!isDraggingCanvas) return;
-            
-            const deltaX = e.clientX - previousTouchX;
-            const deltaY = e.clientY - previousTouchY;
-
-            rotationTargetY += deltaX * 0.007;
-            rotationTargetX += deltaY * 0.007;
-
-            previousTouchX = e.clientX;
-            previousTouchY = e.clientY;
-        });
-
-        window.addEventListener('pointerup', () => {
-            isDraggingCanvas = false;
-        });
-
-        // Observador de Redimensionamento Inteligente para o Canvas do WebGL
-        const resizeWebGL = () => {
-            const container = canvas.parentElement;
-            if (!container) return;
-            const w = container.clientWidth;
-            const h = container.clientHeight;
-            
-            camera.aspect = w / h;
-            camera.updateProjectionMatrix();
-            renderer.setSize(w, h, false);
-        };
-
-        const resizeObserver = new ResizeObserver(resizeWebGL);
-        resizeObserver.observe(canvas.parentElement);
-
-        // Ciclo de Animação do Canvas 3D
-        let clock = new THREE.Clock();
-
-        const animateLoop = () => {
-            requestAnimationFrame(animateLoop);
-            
-            const delta = clock.getDelta();
-            const elapsedTime = clock.getElapsedTime();
-
-            if (particleSystem) {
-                // Junta a rotação natural e a rotação induzida pelo swipe do usuário
-                particleSystem.rotation.y = (elapsedTime * 0.04 * speedMultiplier) + rotationTargetY;
-                particleSystem.rotation.x = (Math.sin(elapsedTime * 0.015) * 0.1 * speedMultiplier) + rotationTargetX;
-            }
-
-            if (meshObject) {
-                meshObject.rotation.y = rotationTargetY;
-                meshObject.rotation.x = rotationTargetX;
-
-                if (activeConcept === 'stars') {
-                    meshObject.rotation.y += elapsedTime * 0.15 * speedMultiplier;
-                    // Pulsação suave do núcleo gravitacional
-                    const scale = 1 + Math.sin(elapsedTime * 2) * 0.05;
-                    meshObject.scale.set(scale, scale, scale);
-                } else if (activeConcept === 'cyber') {
-                    meshObject.rotation.y += elapsedTime * 0.25 * speedMultiplier;
-                    meshObject.rotation.x += elapsedTime * 0.1 * speedMultiplier;
-                }
-            }
-
-            renderer.render(scene, camera);
-        };
-
-        // Gerador de Boilerplate Inteligente - Transforma o design em portfólio real
-        const generateBoilerplateCode = () => {
-            const name = document.getElementById('param-name').value || "ALEX SILVA";
-            const sub = document.getElementById('param-sub').value || "CREATIVE TECH DEVELOPER";
-            
-            if (activeConcept === 'card') {
-                return `<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${name} • Portfólio 3D</title>
-    <script src="https://cdn.tailwindcss.com"><\/script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesque:wght@400;700&family=Syncopate:wght@700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
-    <script src="https://unpkg.com/lucide@latest"><\/script>
-    <style>
-        body {
-            font-family: 'Space Grotesque', sans-serif;
-            background-color: #070709;
-            color: #f4f4f7;
-            overflow: hidden;
-            min-height: 100vh;
-        }
-        .font-brutal { font-family: 'Syncopate', sans-serif; }
-        .glass-panel {
-            background: rgba(19, 19, 25, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-    </style>
-</head>
-<body class="flex flex-col items-center justify-center p-4">
-    <canvas id="bg-canvas" class="absolute inset-0 w-full h-full -z-10"></canvas>
-    
-    <div id="card-container" class="relative z-10 w-full max-w-[340px] aspect-[1/1.55] cursor-pointer" style="touch-action: none;">
-        <div id="card-inner" class="w-full h-full rounded-2xl border border-zinc-800 relative flex flex-col justify-between p-6 shadow-2xl overflow-hidden glass-panel" style="transform-style: preserve-3d; transition: transform 0.1s ease-out;">
-            <div id="card-sheen" class="absolute inset-0 pointer-events-none z-10 opacity-35 mix-blend-color-dodge"></div>
-            
-            <div class="flex justify-between items-start">
-                <div>
-                    <span class="text-[9px] font-brutal tracking-widest text-zinc-500 block uppercase">Creative Ticket</span>
-                    <span class="text-[10px] font-mono tracking-wider font-bold px-2.5 py-0.5 rounded-full mt-1 inline-block" style="background-color: ${accentColor}; color: #000;">PRO_DEVELOPER</span>
-                </div>
-                <div class="w-8 h-8 rounded-full border border-zinc-700 bg-zinc-900 flex items-center justify-center">
-                    <i data-lucide="cpu" class="w-4 h-4 text-zinc-400"></i>
-                </div>
-            </div>
-
-            <div class="my-6">
-                <span class="text-[10px] font-mono text-zinc-500 block mb-1">DESIGNER IN CHARGE</span>
-                <h3 class="font-brutal text-2xl font-bold leading-none text-white uppercase tracking-wider">${name}</h3>
-                <p class="text-xs text-zinc-400 font-mono mt-2 tracking-tight">${sub}</p>
-            </div>
-
-            <div class="border-t border-zinc-800/80 pt-5 flex justify-between items-center">
-                <div class="flex flex-col">
-                    <span class="text-[9px] text-zinc-500 tracking-wider">STATUS</span>
-                    <span class="text-xs font-bold text-green-400 flex items-center gap-1 mt-0.5">
-                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> DISPONÍVEL
-                    </span>
-                </div>
-                <div class="flex flex-col items-end">
-                    <div class="w-20 h-7 opacity-75" style="background: repeating-linear-gradient(90deg, #fff, #fff 1px, transparent 1px, transparent 4px);"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        lucide.createIcons();
-        const container = document.getElementById('card-container');
-        const inner = document.getElementById('card-inner');
-        const sheen = document.getElementById('card-sheen');
-
-        container.addEventListener('pointermove', (e) => {
-            const rect = container.getBoundingClientRect();
-            const x = e.clientX - rect.left - (rect.width / 2);
-            const y = e.clientY - rect.top - (rect.height / 2);
-            const rx = -(y / (rect.height / 2)) * 20; 
-            const ry = (x / (rect.width / 2)) * 20;
-            inner.style.transform = \`rotateX(\${rx}deg) rotateY(\s*\${ry}deg)\`;
-            
-            const px = (e.clientX - rect.left) / rect.width * 100;
-            const py = (e.clientY - rect.top) / rect.height * 100;
-            sheen.style.background = \`radial-gradient(circle at \${px}% \${py}%, rgba(255, 255, 255, 0.45) 0%, transparent 60%)\`;
-        });
-
-        container.addEventListener('pointerleave', () => {
-            inner.style.transform = 'rotateX(0deg) rotateY(0deg)';
-            sheen.style.background = 'none';
-        });
-
-        // Background WebGL Starfield
-        const canvas = document.getElementById('bg-canvas');
-        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 0, 30);
-
-        const pGeometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(${starsCount} * 2 * 3);
-        for(let i=0; i<${starsCount} * 2 * 3; i++) positions[i] = (Math.random() - 0.5) * 50;
-        pGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        const pMaterial = new THREE.PointsMaterial({ color: '${accentColor}', size: 0.15, transparent: true, opacity: 0.6 });
-        const particles = new THREE.Points(pGeometry, pMaterial);
-        scene.add(particles);
-
-        function resize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        function animate() {
-            requestAnimationFrame(animate);
-            particles.rotation.y += 0.001 * ${speedMultiplier};
-            renderer.render(scene, camera);
-        }
-        animate();
-    <\/script>
-</body>
-</html>`;
-            } else if (activeConcept === 'stars') {
-                return `<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${name} • Constellation 3D</title>
-    <script src="https://cdn.tailwindcss.com"><\/script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesque:wght@400;700&family=Syncopate:wght@700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
-    <script src="https://unpkg.com/lucide@latest"><\/script>
-    <style>
-        body {
-            font-family: 'Space Grotesque', sans-serif;
-            background-color: #050508;
-            color: #f4f4f7;
-            overflow: hidden;
-            min-height: 100vh;
-        }
-        .font-brutal { font-family: 'Syncopate', sans-serif; }
-    </style>
-</head>
-<body class="relative">
-    <canvas id="stars-canvas" class="absolute inset-0 w-full h-full z-10"></canvas>
-    
-    <div class="absolute top-6 left-6 z-20 pointer-events-none">
-        <h1 class="font-brutal text-lg tracking-wider text-white uppercase">${name}</h1>
-        <p class="text-xs font-mono text-zinc-400 mt-1">${sub}</p>
-    </div>
-
-    <div class="absolute bottom-6 right-6 z-20 bg-zinc-900/80 border border-zinc-800 backdrop-blur px-4 py-3 rounded-xl flex items-center gap-3">
-        <div class="w-2.5 h-2.5 rounded-full" style="background-color: ${accentColor};"></div>
-        <span class="text-xs text-zinc-300">Constelação Orbital WebGL Ativa</span>
-    </div>
-
-    <script>
-        const canvas = document.getElementById('stars-canvas');
-        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 0, 30);
-
-        // Ambient Lights
-        const light = new THREE.AmbientLight(0xffffff, 0.4);
-        scene.add(light);
-        const point = new THREE.PointLight('${accentColor}', 1, 100);
-        point.position.set(0, 10, 15);
-        scene.add(point);
-
-        // Core central
-        const coreGeo = new THREE.SphereGeometry(1.5, 32, 32);
-        const coreMat = new THREE.MeshPhongMaterial({ color: '${accentColor}', emissive: '${accentColor}', emissiveIntensity: 0.6 });
-        const core = new THREE.Mesh(coreGeo, coreMat);
-        scene.add(core);
-
-        // Orbitais
-        const pGeometry = new THREE.BufferGeometry();
-        const count = ${starsCount};
-        const positions = new Float32Array(count * 3);
-        for(let i=0; i<count*3; i+=3) {
-            const r = 6 + Math.random() * 8;
-            const a = Math.random() * Math.PI * 2;
-            positions[i] = Math.cos(a)*r;
-            positions[i+1] = (Math.random() - 0.5)*4;
-            positions[i+2] = Math.sin(a)*r;
-        }
-        pGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        const pMaterial = new THREE.PointsMaterial({ color: '${accentColor}', size: 0.25, transparent: true, opacity: 0.8 });
-        const system = new THREE.Points(pGeometry, pMaterial);
-        scene.add(system);
-
-        function resize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        let clock = new THREE.Clock();
-        function animate() {
-            requestAnimationFrame(animate);
-            const t = clock.getElapsedTime();
-            system.rotation.y = t * 0.05 * ${speedMultiplier};
-            core.rotation.y += 0.01;
-            renderer.render(scene, camera);
-        }
-        animate();
-    <\/script>
-</body>
-</html>`;
-            } else if (activeConcept === 'cyber') {
-                return `<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${name} • Matrix Terminal</title>
-    <script src="https://cdn.tailwindcss.com"><\/script>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
-    <style>
-        body {
-            font-family: 'Fira Code', monospace;
-            background-color: #030304;
-            color: ${accentColor};
-            overflow: hidden;
-            min-height: 100vh;
-        }
-        .scanlines::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
-            z-index: 999;
-            background-size: 100% 4px, 6px 100%;
-            pointer-events: none;
-        }
-    </style>
-</head>
-<body class="relative flex flex-col justify-between p-6 scanlines h-screen">
-    <canvas id="cyber-canvas" class="absolute inset-0 w-full h-full -z-10 opacity-40"></canvas>
-    
-    <div class="flex justify-between items-start w-full relative z-10">
-        <div class="border px-4 py-2 rounded" style="border-color: ${accentColor};">
-            SYSTEM STATUS: ONLINE
-        </div>
-        <div class="border px-4 py-2 rounded" style="border-color: ${accentColor};">
-            SYS: STABLE
-        </div>
-    </div>
-
-    <div class="max-w-[480px] p-6 rounded border relative z-10 bg-black/60 backdrop-blur-sm self-start" style="border-color: ${accentColor};">
-        <p class="opacity-40">> INITIALIZING SECURITY SCANNER...</p>
-        <p class="font-bold">> ACCESS GRANTED. CREDENTIALS VALIDATED.</p>
-        <p class="mt-4">> OPERATOR: <span class="text-white font-bold">${name}</span></p>
-        <p class="opacity-80">> SPECS: ${sub}</p>
-    </div>
-
-    <div class="text-xs opacity-50 relative z-10">
-        // DESIGNED BY ${name} • COPIED FROM THE 3D PLAYGROUND.
-    </div>
-
-    <script>
-        const canvas = document.getElementById('cyber-canvas');
-        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 0, 30);
-
-        const geo = new THREE.TorusKnotGeometry(4.5, 1.2, 120, 16);
-        const mat = new THREE.MeshBasicMaterial({ color: '${accentColor}', wireframe: true });
-        const mesh = new THREE.Mesh(geo, mat);
-        scene.add(mesh);
-
-        function resize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        function animate() {
-            requestAnimationFrame(animate);
-            mesh.rotation.y += 0.005 * ${speedMultiplier};
-            mesh.rotation.x += 0.002 * ${speedMultiplier};
-            renderer.render(scene, camera);
-        }
-        animate();
-    <\/script>
-</body>
-</html>`;
-            }
-        };
-
-        // Função Segura para Cópia para o clipboard usando comando fallback devido ao ambiente iFrame
-        const copyBoilerplate = () => {
-            const code = generateBoilerplateCode();
-            
-            // Cria elemento textarea invisível para cópia segura por comando executável
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = code;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            tempTextArea.setSelectionRange(0, 99999); // Suporte para iOS
-
-            let success = false;
-            try {
-                success = document.execCommand('copy');
-            } catch (err) {
-                console.error('Falha ao tentar copiar código', err);
-            }
-            document.body.removeChild(tempTextArea);
-
-            if (success) {
-                // Dispara Toast de confirmação visual moderno na tela
-                toastMessage.textContent = "CÓDIGO COPIADO! COLE NO SEU INDEX.HTML";
-                toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
-                toast.classList.add('translate-y-0', 'opacity-100');
-                
-                setTimeout(() => {
-                    dismissToast();
-                }, 5000);
-            }
-        };
-
-        const dismissToast = () => {
-            toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
-            toast.classList.remove('translate-y-0', 'opacity-100');
-        };
-
-        // Eventos OnLoad Iniciais
-        window.onload = () => {
-            updateParams();
-            resizeWebGL();
-            animateLoop();
-        };
-
     </script>
 </body>
 </html>
