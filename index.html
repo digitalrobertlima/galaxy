@@ -7,24 +7,18 @@
     <!-- Fontes Premium de Alta Costura -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-color: #060606;
+            --bg-dark: #070707;
             --bronze: #b59975;
-            --concrete-grey: #2a2a2c;
-            --oak-warm: #4a3b2c;
-            --light-glow: rgba(255, 230, 180, 0.12);
+            --glass-bg: rgba(18, 18, 18, 0.7);
+            --glass-border: rgba(181, 153, 117, 0.15);
             --text-light: #f5f5f7;
-            --text-muted: #7e7e86;
+            --text-muted: #86868b;
             --font-serif: 'Cormorant Garamond', serif;
             --font-sans: 'Plus Jakarta Sans', sans-serif;
-            
-            /* Estado Dinâmico do Monolito */
-            --monolith-bg: var(--concrete-grey);
-            --monolith-glow: rgba(181, 153, 117, 0.15);
-            --monolith-border: rgba(255, 255, 255, 0.08);
         }
 
         * {
@@ -32,506 +26,323 @@
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
-            user-select: none;
         }
 
-        body, html {
-            background-color: var(--bg-color);
+        body {
+            background-color: var(--bg-dark);
             color: var(--text-light);
             font-family: var(--font-sans);
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-            position: relative;
+            overflow-x: hidden;
+            padding-bottom: 100px; /* Espaço para o botão fixo debaixo */
         }
 
-        /* Ruído de textura orgânica de fundo */
+        /* Textura de ruído de concreto microscópico */
         body::before {
             content: '';
-            position: absolute;
+            position: fixed;
             inset: 0;
-            opacity: 0.015;
+            opacity: 0.02;
             pointer-events: none;
-            z-index: 1;
+            z-index: 999;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        /* Gradiente de iluminação cênica de fundo */
-        .ambient-light {
-            position: absolute;
-            width: 100vw;
-            height: 100vh;
-            background: radial-gradient(circle at 50% 35%, var(--monolith-glow) 0%, transparent 70%);
-            z-index: 2;
-            transition: background 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            pointer-events: none;
-        }
-
-        /* Header Minimalista */
+        /* Header Fixo e Elegante */
         header {
-            position: absolute;
-            top: 28px;
-            left: 24px;
-            right: 24px;
+            width: 100%;
+            padding: 30px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
 
         .brand {
             font-family: var(--font-serif);
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             letter-spacing: 3px;
-            color: var(--text-light);
+            text-transform: uppercase;
         }
 
-        .status {
+        .subtitle {
             font-size: 0.6rem;
             letter-spacing: 2px;
-            text-transform: uppercase;
             color: var(--bronze);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .status::before {
-            content: '';
-            width: 5px;
-            height: 5px;
-            background: var(--bronze);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--bronze);
-        }
-
-        /* Área do Simulador Central */
-        main {
-            height: 100%;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            padding: 100px 24px 40px 24px;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* Zona de toque isolada para rotação 3D */
-        .touch-zone {
-            flex: 1;
-            width: 100%;
-            max-width: 360px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            touch-action: none; /* Bloqueia o scroll nativo do celular ao arrastar */
-        }
-
-        .perspective {
-            perspective: 1200px;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* O Monolito Espacial */
-        .monolith {
-            width: 220px;
-            height: 340px;
-            background: var(--monolith-bg);
-            border: 1px solid var(--monolith-border);
-            border-radius: 8px;
-            box-shadow: 
-                0 40px 80px rgba(0, 0, 0, 0.7),
-                inset 0 1px 1px rgba(255, 255, 255, 0.05);
-            transform-style: preserve-3d;
-            transition: 
-                transform 0.15s ease-out, 
-                background 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
-                border-color 0.8s ease,
-                box-shadow 0.8s ease;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 32px 24px;
-            overflow: hidden;
-        }
-
-        /* Efeito de Reflexo de Luz Especular (Lustre) */
-        .monolith::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.06) 0%, transparent 60%);
-            pointer-events: none;
-            z-index: 3;
-        }
-
-        /* Texturas sobrepostas dinamicamente */
-        .texture-overlay {
-            position: absolute;
-            inset: 0;
-            opacity: 0.15;
-            pointer-events: none;
-            z-index: 1;
-            transition: background 0.8s ease, opacity 0.8s ease;
-        }
-
-        .monolith-header {
-            z-index: 10;
-            transform: translateZ(25px);
-        }
-
-        .monolith-header span {
-            font-size: 0.65rem;
-            letter-spacing: 3px;
             text-transform: uppercase;
-            color: var(--bronze);
             font-weight: 600;
         }
 
-        .monolith-body {
-            z-index: 10;
-            transform: translateZ(40px);
+        /* Hero Section de Apresentação */
+        .hero {
+            padding: 60px 24px 40px 24px;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .monolith-body h2 {
+        .hero h1 {
             font-family: var(--font-serif);
-            font-size: 2rem;
+            font-size: 2.8rem;
             font-weight: 300;
-            line-height: 1.15;
-            margin-bottom: 8px;
-            color: var(--text-light);
-            transition: color 0.5s ease;
+            line-height: 1.1;
+            margin-bottom: 20px;
         }
 
-        .monolith-body p {
+        .hero h1 span {
+            font-style: italic;
+            color: var(--bronze);
+        }
+
+        .hero p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Container do Moodboard de Projetos (Scroll Vertical Natural) */
+        .showcase {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+            padding: 0 24px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Card de Material com Efeito de Perspectiva 3D Suave */
+        .mood-card-wrapper {
+            perspective: 1000px;
+            width: 100%;
+        }
+
+        .mood-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out; /* Segue o dedo de forma fluida */
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Brilho de luxo reflexivo na superfície do card */
+        .mood-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(181, 153, 117, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        /* Amostra física estilizada (Design de Ambientes puro) */
+        .material-sample {
+            width: 100%;
+            height: 180px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Exemplo 1: Concreto Aparente */
+        .sample-concrete {
+            background: linear-gradient(135deg, #2c2c2e 0%, #1c1c1e 100%);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Exemplo 2: Carvalho Orgânico */
+        .sample-wood {
+            background: linear-gradient(135deg, #443525 0%, #20170e 100%);
+            border: 1px solid rgba(181, 153, 117, 0.2);
+        }
+
+        /* Overlay geométrico que simula desenho técnico/detalhamento */
+        .technical-grid {
+            position: absolute;
+            inset: 15px;
+            border: 1px dashed rgba(181, 153, 117, 0.2);
+            opacity: 0.5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: var(--bronze);
+            letter-spacing: 1px;
+        }
+
+        .card-info {
+            transform: translateZ(20px); /* Parallax real ao inclinar */
+        }
+
+        .card-info span {
+            font-size: 0.65rem;
+            color: var(--bronze);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .card-info h2 {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin: 8px 0;
+        }
+
+        .card-info p {
             font-size: 0.8rem;
             color: var(--text-muted);
             line-height: 1.5;
         }
 
-        .monolith-footer {
+        /* BARRA DO WHATSAPP FIXA (A Joia de Usabilidade da Página) */
+        .sticky-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(7, 7, 7, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(181, 153, 117, 0.15);
+            padding: 16px 24px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 10;
-            transform: translateZ(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 16px;
+            justify-content: center;
+            z-index: 1000;
         }
 
-        .monolith-footer span {
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-muted);
-        }
-
-        /* Painel de Controle de Materiais (Fácil alcance do polegar) */
-        .control-deck {
+        .cta-button {
             width: 100%;
             max-width: 360px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* Amostras de Materiais */
-        .materials-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-
-        .material-button {
-            background: rgba(20, 20, 22, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
-            padding: 12px 6px;
-            font-family: var(--font-sans);
-            font-size: 0.6rem;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            text-align: center;
-        }
-
-        .material-button.active {
-            border-color: var(--bronze);
-            color: var(--text-light);
-            background: rgba(181, 153, 117, 0.05);
-            box-shadow: 0 4px 15px rgba(181, 153, 117, 0.1);
-        }
-
-        /* Botão de Fechamento Estratégico (WhatsApp) */
-        .cta-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
             background: var(--text-light);
-            color: var(--bg-color);
+            color: var(--bg-dark);
             border: none;
-            padding: 18px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: 30px; /* Formato pílula ultra amigável para cliques */
             font-family: var(--font-sans);
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 600;
             letter-spacing: 2px;
             text-transform: uppercase;
             text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-button::after {
-            content: '';
-            position: absolute;
-            width: 30px;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: skewX(-30deg);
-            top: 0;
-            left: -50px;
-            transition: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(181, 153, 117, 0.2);
+            transition: all 0.3s ease;
         }
 
         .cta-button:active {
             transform: scale(0.97);
             background: var(--bronze);
             color: var(--text-light);
-            box-shadow: 0 4px 15px rgba(181, 153, 117, 0.3);
         }
 
-        .cta-button:active::after {
-            left: 110%;
-            transition: left 0.6s ease;
-        }
-
-        /* Feedback de Instabilidade/Movimento */
-        .instruction {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-align: center;
-            margin-top: -10px;
-            opacity: 0.6;
+        .whatsapp-icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
         }
     </style>
 </head>
 <body>
 
-    <!-- Luz de Fundo Reativa -->
-    <div class="ambient-light" id="bg-light"></div>
-
-    <!-- Header Fixo -->
+    <!-- Header Elegante -->
     <header>
         <div class="brand">ROBERT</div>
-        <div class="status">Simulador Tátil v1.0</div>
+        <div class="subtitle">Curadoria Espacial</div>
     </header>
 
-    <main>
-        
-        <!-- Instrução Inicial -->
-        <div class="instruction">Arraste para rotacionar o espaço</div>
+    <!-- Apresentação Sem Frescura -->
+    <section class="hero">
+        <h1>Design de Interiores <span>Estratégico</span></h1>
+        <p>Eu materializo projetos corporativos e residenciais unindo a força do estilo industrial com o conforto da arquitetura orgânica de luxo.</p>
+    </section>
 
-        <!-- Área de Toque Tridimensional -->
-        <div class="touch-zone" id="touch-area">
-            <div class="perspective">
-                <div class="monolith" id="space-monolith">
-                    <!-- Camada de Textura Procedural -->
-                    <div class="texture-overlay" id="monolith-texture"></div>
+    <!-- Galeria Fluida e Intuitiva (Scroll Natural) -->
+    <section class="showcase">
 
-                    <div class="monolith-header">
-                        <span id="monolith-tag">VOLUME ACÚSTICO</span>
-                    </div>
-
-                    <div class="monolith-body">
-                        <h2 id="monolith-title">Concreto<br>Bruto.</h2>
-                        <p id="monolith-desc">Superfícies monolíticas que trazem peso, verdade estrutural e solidez para a composição espacial.</p>
-                    </div>
-
-                    <div class="monolith-footer">
-                        <span id="monolith-coord">S-01 // CORE</span>
-                        <div class="status-dot"></div>
-                    </div>
+        <!-- CARD 1: CONCRETO -->
+        <div class="mood-card-wrapper">
+            <div class="mood-card">
+                <div class="material-sample sample-concrete">
+                    <div class="technical-grid">S-01 // DETALHE INDUSTRIAL</div>
+                </div>
+                <div class="card-info">
+                    <span>Materialidade</span>
+                    <h2>Concreto Aparente</h2>
+                    <p>A força estética do brutalismo em texturas cruas que trazem verdade e personalidade para o cenário.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Deck de Controle Inteligente -->
-        <div class="control-deck">
-            <!-- Amostras de Materiais -->
-            <div class="materials-grid">
-                <button class="material-button active" onclick="setMaterial('concreto')">Concreto</button>
-                <button class="material-button" onclick="setMaterial('madeira')">Carvalho</button>
-                <button class="material-button" onclick="setMaterial('luz')">Luz Cênica</button>
+        <!-- CARD 2: CARVALHO -->
+        <div class="mood-card-wrapper">
+            <div class="mood-card">
+                <div class="material-sample sample-wood">
+                    <div class="technical-grid">S-02 // CALOR ORGÂNICO</div>
+                </div>
+                <div class="card-info">
+                    <span>Aconchego</span>
+                    <h2>Madeira & Luz</h2>
+                    <p>O equilíbrio térmico perfeito. Elementos que aquecem o olhar e tornam os ambientes comerciais sofisticados e convidativos.</p>
+                </div>
             </div>
-
-            <!-- Botão WhatsApp Direto -->
-            <!-- Note: Utilizando o telefone estratégico do usuário fornecido: 31982313684 -->
-            <a href="https://wa.me/5531982313684?text=Olá%20Robert,%20interagi%20com%20o%20seu%20Simulador%20Tátil%20e%20gostaria%20de%20solicitar%20um%20diagnóstico%20estratégico%20para%20o%20meu%20espaço." class="cta-button" target="_blank">
-                Solicitar Diagnóstico
-            </a>
         </div>
 
-    </main>
+    </section>
 
-    <!-- Script de Física 3D e Transição de Materiais -->
+    <!-- Barra de WhatsApp Fixa e Sempre Disponível -->
+    <div class="sticky-footer">
+        <a href="https://wa.me/5531982313684?text=Olá%20Robert,%20visitei%20seu%20portfólio%20e%20gostaria%20de%20falar%20sobre%20o%20projeto%20do%20meu%20espaço." class="cta-button" target="_blank">
+            <svg class="whatsapp-icon" viewBox="0 0 24 24">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.503-5.732-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.965C16.628 3.824 14.16 2.8 11.57 2.8c-5.442 0-9.866 4.372-9.87 9.802 0 1.714.475 3.393 1.374 4.869l-.938 3.425 3.51-.942z"/>
+            </svg>
+            Solicitar Projeto
+        </a>
+    </div>
+
+    <!-- Script de Micro-Interação Não-Bloqueante -->
     <script>
-        const touchArea = document.getElementById('touch-area');
-        const monolith = document.getElementById('space-monolith');
-        const bgLight = document.getElementById('bg-light');
-        
-        // Elementos Dinâmicos do Monolito
-        const mTexture = document.getElementById('monolith-texture');
-        const mTag = document.getElementById('monolith-tag');
-        const mTitle = document.getElementById('monolith-title');
-        const mDesc = document.getElementById('monolith-desc');
-        const mCoord = document.getElementById('monolith-coord');
+        const cards = document.querySelectorAll('.mood-card');
 
-        let isDragging = false;
-        let startX = 0;
-        let startY = 0;
-        let currentRotX = 0;
-        let currentRotY = 0;
-        let targetRotX = 0;
-        let targetRotY = 0;
+        cards.forEach(card => {
+            const wrapper = card.parentElement;
 
-        // FÍSICA TÁTIL E ROTAÇÃO (MOBILE-FIRST)
-        touchArea.addEventListener('pointerdown', (e) => {
-            isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            touchArea.setPointerCapture(e.pointerId);
+            // Ativa inclinação sem bloquear o movimento natural de scroll do dedo
+            wrapper.addEventListener('pointermove', (e) => {
+                const rect = wrapper.getBoundingClientRect();
+                
+                // Posição relativa
+                const x = e.clientX - rect.left - (rect.width / 2);
+                const y = e.clientY - rect.top - (rect.height / 2);
+
+                // Ângulo bem suave (máximo 8 graus para não quebrar a legibilidade)
+                const rotateX = -(y / (rect.height / 2)) * 8;
+                const rotateY = (x / (rect.width / 2)) * 8;
+
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+                // Brilho de lanterna que acompanha o toque
+                const percentX = ((e.clientX - rect.left) / rect.width) * 100;
+                const percentY = ((e.clientY - rect.top) / rect.height) * 100;
+                card.style.setProperty('--tx', `${percentX}%`);
+                card.style.setProperty('--ty', `${percentY}%`);
+            });
+
+            // Reseta suavemente
+            wrapper.addEventListener('pointerleave', () => {
+                card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+                card.style.setProperty('--tx', '50%');
+                card.style.setProperty('--ty', '50%');
+            });
         });
-
-        touchArea.addEventListener('pointermove', (e) => {
-            const rect = touchArea.getBoundingClientRect();
-            
-            // 1. Efeito de brilho especular que segue o toque
-            const mx = e.clientX - rect.left;
-            const my = e.clientY - rect.top;
-            monolith.style.setProperty('--mx', `${mx}px`);
-            monolith.style.setProperty('--my', `${my}px`);
-
-            if (!isDragging) return;
-
-            // 2. Rotação 3D do Monolito
-            const deltaX = e.clientX - startX;
-            const deltaY = e.clientY - startY;
-
-            // Mapeamento da força do arraste (limite confortável de rotação)
-            targetRotY = currentRotY + (deltaX * 0.25);
-            targetRotX = currentRotX - (deltaY * 0.25);
-
-            // Trava para evitar rotações absurdas de cabeça para baixo
-            targetRotX = Math.max(-40, Math.min(40, targetRotX));
-
-            monolith.style.transform = `rotateX(${targetRotX}deg) rotateY(${targetRotY}deg)`;
-        });
-
-        touchArea.addEventListener('pointerup', (e) => {
-            isDragging = false;
-            // Salva o ângulo atual para o próximo movimento começar dele
-            currentRotX = targetRotX;
-            currentRotY = targetRotY;
-        });
-
-        // Retorno suave para o centro quando o dedo sai do quadrante do simulador
-        touchArea.addEventListener('pointerleave', () => {
-            if (!isDragging) {
-                // Animação suave de volta para a posição frontal
-                currentRotX = 0;
-                currentRotY = 0;
-                targetRotX = 0;
-                targetRotY = 0;
-                monolith.style.transform = 'rotateX(0deg) rotateY(0deg)';
-            }
-        });
-
-        // BANCO DE MATERIAIS SENSORIAIS (Industrial Organic)
-        const materials = {
-            concreto: {
-                tag: "VOLUME ACÚSTICO",
-                title: "Concreto<br>Bruto.",
-                desc: "Superfícies monolíticas que trazem peso, verdade estrutural e solidez para a composição espacial.",
-                coord: "S-01 // CORE",
-                bg: "#1e1e1f",
-                border: "rgba(255, 255, 255, 0.08)",
-                glow: "rgba(181, 153, 117, 0.08)",
-                shadow: "0 40px 80px rgba(0, 0, 0, 0.7)",
-                texture: "repeating-linear-gradient(45deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 2px, transparent 2px, transparent 10px)"
-            },
-            madeira: {
-                tag: "MÉTRICA ORGÂNICA",
-                title: "Carvalho<br>Nobre.",
-                desc: "O contraste térmico ideal. Texturas fibrosas que humanizam o ambiente através do toque e do calor visual.",
-                coord: "S-02 // ORGANIC",
-                bg: "#2b2015",
-                border: "rgba(181, 153, 117, 0.2)",
-                glow: "rgba(181, 153, 117, 0.18)",
-                shadow: "0 40px 80px rgba(74, 59, 44, 0.3)",
-                texture: "radial-gradient(ellipse at center, rgba(181, 153, 117, 0.1) 0%, transparent 80%)"
-            },
-            luz: {
-                tag: "ATMOSFERA CÊNICA",
-                title: "Luz<br>Direcionada.",
-                desc: "A matéria invisível do design. Curadoria de sombras projetadas que esculpem volumes e geram mistério.",
-                coord: "S-03 // ATMOS",
-                bg: "#121214",
-                border: "rgba(255, 215, 0, 0.3)",
-                glow: "rgba(255, 200, 100, 0.25)",
-                shadow: "0 0 50px rgba(181, 153, 117, 0.2)",
-                texture: "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%)"
-            }
-        };
-
-        function setMaterial(type) {
-            // Atualiza botões ativos
-            document.querySelectorAll('.material-button').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            const m = materials[type];
-
-            // Aplica transições estéticas no Monolito
-            document.documentElement.style.setProperty('--monolith-bg', m.bg);
-            document.documentElement.style.setProperty('--monolith-border', m.border);
-            document.documentElement.style.setProperty('--monolith-glow', m.glow);
-            
-            monolith.style.boxShadow = m.shadow;
-            mTexture.style.background = m.texture;
-
-            // Transição de texto suave
-            mTag.style.opacity = 0;
-            mTitle.style.opacity = 0;
-            mDesc.style.opacity = 0;
-            mCoord.style.opacity = 0;
-
-            setTimeout(() => {
-                mTag.textContent = m.tag;
-                mTitle.innerHTML = m.title;
-                mDesc.textContent = m.desc;
-                mCoord.textContent = m.coord;
-
-                mTag.style.opacity = 1;
-                mTitle.style.opacity = 1;
-                mDesc.style.opacity = 1;
-                mCoord.style.opacity = 1;
-            }, 300);
-        }
     </script>
 </body>
 </html>
